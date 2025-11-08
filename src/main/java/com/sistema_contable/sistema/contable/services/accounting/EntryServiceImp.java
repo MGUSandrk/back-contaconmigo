@@ -9,9 +9,7 @@ import com.sistema_contable.sistema.contable.services.accounting.interfaces.Acco
 import com.sistema_contable.sistema.contable.services.accounting.interfaces.EntryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.Date;
-import java.util.List;
 
 @Service
 public class EntryServiceImp implements EntryService {

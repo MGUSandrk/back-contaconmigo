@@ -2,23 +2,16 @@ package com.sistema_contable.sistema.contable.services.accounting;
 
 import com.sistema_contable.sistema.contable.exceptions.AccountNotFindException;
 import com.sistema_contable.sistema.contable.exceptions.BadAccountException;
-import com.sistema_contable.sistema.contable.exceptions.ResourceNotFindException;
 import com.sistema_contable.sistema.contable.model.Account;
 import com.sistema_contable.sistema.contable.model.BalanceAccount;
 import com.sistema_contable.sistema.contable.model.ControlAccount;
 import com.sistema_contable.sistema.contable.repository.AccountRepository;
 import com.sistema_contable.sistema.contable.services.accounting.interfaces.AccountService;
-import com.sistema_contable.sistema.contable.services.accounting.interfaces.EntryService;
 import com.sistema_contable.sistema.contable.services.accounting.interfaces.MovementService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-
-import java.beans.Transient;
 import java.util.List;
 
 @Service

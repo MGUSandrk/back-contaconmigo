@@ -3,8 +3,6 @@ package com.sistema_contable.sistema.contable.dto;
 import com.sistema_contable.sistema.contable.model.Account;
 import com.sistema_contable.sistema.contable.model.Entry;
 import com.sistema_contable.sistema.contable.model.Movement;
-import com.sistema_contable.sistema.contable.model.User;
-import org.hibernate.annotations.Comment;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 

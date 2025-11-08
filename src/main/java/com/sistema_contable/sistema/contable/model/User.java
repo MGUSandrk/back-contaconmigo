@@ -1,6 +1,4 @@
 package com.sistema_contable.sistema.contable.model;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.UuidGenerator;
 
 import jakarta.persistence.*;
 

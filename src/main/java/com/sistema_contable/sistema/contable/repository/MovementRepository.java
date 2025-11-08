@@ -1,6 +1,5 @@
 package com.sistema_contable.sistema.contable.repository;
 
-import com.sistema_contable.sistema.contable.model.Entry;
 import com.sistema_contable.sistema.contable.model.Movement;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

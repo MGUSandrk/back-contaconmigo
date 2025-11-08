@@ -3,7 +3,6 @@ package com.sistema_contable.sistema.contable.resources;
 import com.sistema_contable.sistema.contable.dto.EntryResponseDTO;
 import com.sistema_contable.sistema.contable.exceptions.ModelExceptions;
 import com.sistema_contable.sistema.contable.model.Entry;
-import com.sistema_contable.sistema.contable.model.User;
 import com.sistema_contable.sistema.contable.services.accounting.interfaces.JournalService;
 import com.sistema_contable.sistema.contable.services.security.interfaces.AuthorizationService;
 import com.sistema_contable.sistema.contable.util.DateFormatter;
@@ -12,11 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -40,7 +34,7 @@ public class JournalResource {
     @GetMapping
     public ResponseEntity<?> getLastEntrys(@RequestHeader("Authorization") String token){
         try {
-            User userDB = authService.authorize(token);
+            authService.authorize(token);
             return new ResponseEntity<>(entryResponse(service.getLastEntrys()), HttpStatus.OK);
         } catch (ModelExceptions exception) {
             return new ResponseEntity<>(null, exception.getHttpStatus());
@@ -55,7 +49,7 @@ public class JournalResource {
             @RequestParam("before") String before,
             @RequestParam("after")String after) {
         try {
-            User userDB = authService.authorize(token);
+            authService.authorize(token);
             return new ResponseEntity<>(
                     entryResponse(service.getJournalBetween(
                         dateFormatter.beforeDate(before),

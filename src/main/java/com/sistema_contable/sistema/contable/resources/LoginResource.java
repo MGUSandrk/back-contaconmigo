@@ -4,7 +4,6 @@ import com.sistema_contable.sistema.contable.dto.AuthenticationRequestDTO;
 import com.sistema_contable.sistema.contable.exceptions.ModelExceptions;
 import com.sistema_contable.sistema.contable.model.User;
 import com.sistema_contable.sistema.contable.services.security.interfaces.AuthenticationService;
-import com.sistema_contable.sistema.contable.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,8 +19,6 @@ import java.util.Map;
 public class LoginResource {
 
     //dependencies
-    @Autowired
-    private UserService service;
     @Autowired
     private ModelMapper mapper;
     @Autowired

@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
 @Entity
 @DiscriminatorValue("control")
 public class ControlAccount extends Account {
@@ -23,10 +21,6 @@ public class ControlAccount extends Account {
 
     //add children
     public void addChildren(Account children) {
-        //set variables to do the code more readable
-        String ownCode = this.getCode();
-        List<Account> childAccounts = this.getChildAccounts();
-        Account father = this.getControl_account_id();
         //set the children
         children.setControl_account_id(this);
         this.getChildAccounts().add(children);

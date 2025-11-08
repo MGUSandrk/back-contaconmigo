@@ -1,6 +1,5 @@
 package com.sistema_contable.sistema.contable.dto;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public class AccountResponseDTO {
