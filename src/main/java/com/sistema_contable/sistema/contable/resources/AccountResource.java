@@ -38,8 +38,9 @@ public class AccountResource {
             authService.adminAuthorize(token);
             service.create(mapper.map(accountDTO, BalanceAccount.class), id);
             return new ResponseEntity<>(null, HttpStatus.CREATED);
-        } catch (ModelExceptions exception) {
-            return new ResponseEntity<>(null, exception.getHttpStatus());
+        } catch (ModelExceptions modelError) {
+            System.out.println(modelError.getMessage());
+            return new ResponseEntity<>(null, modelError.getHttpStatus());
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);}}
 
@@ -50,8 +51,9 @@ public class AccountResource {
             authService.adminAuthorize(token);
             service.create(mapper.map(accountDTO, ControlAccount.class), id);
             return new ResponseEntity<>(null, HttpStatus.CREATED);
-        } catch (ModelExceptions e) {
-            return new ResponseEntity<>(null, e.getHttpStatus());
+        } catch (ModelExceptions modelError) {
+            System.out.println(modelError.getMessage());
+            return new ResponseEntity<>(null, modelError.getHttpStatus());
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);}}
 
@@ -62,8 +64,9 @@ public class AccountResource {
             authService.adminAuthorize(token);
             service.delete(id);
             return new ResponseEntity<>(null, HttpStatus.OK);
-        } catch (ModelExceptions exception) {
-            return new ResponseEntity<>(null, exception.getHttpStatus());
+        } catch (ModelExceptions modelError) {
+            System.out.println(modelError.getMessage());
+            return new ResponseEntity<>(null, modelError.getHttpStatus());
         }catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);}}
 
@@ -75,8 +78,9 @@ public class AccountResource {
             authService.adminAuthorize(token);
             service.activate(id);
             return new ResponseEntity<>(null, HttpStatus.OK);
-        } catch (ModelExceptions exception) {
-            return new ResponseEntity<>(null, exception.getHttpStatus());
+        } catch (ModelExceptions modelError) {
+            System.out.println(modelError.getMessage());
+            return new ResponseEntity<>(null, modelError.getHttpStatus());
         }catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);}}
 
@@ -87,8 +91,9 @@ public class AccountResource {
             authService.adminAuthorize(token);
             service.update(id,name);
             return new ResponseEntity<>(null, HttpStatus.RESET_CONTENT);
-        } catch (ModelExceptions exception) {
-            return new ResponseEntity<>(null, exception.getHttpStatus());
+        } catch (ModelExceptions modelError) {
+            System.out.println(modelError.getMessage());
+            return new ResponseEntity<>(null, modelError.getHttpStatus());
         }catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);}}
 
@@ -98,8 +103,9 @@ public class AccountResource {
         try {
             authService.authorize(token);
             return new ResponseEntity<>(accountResponse(service.getAll()), HttpStatus.OK);
-        } catch (ModelExceptions exception){
-            return new ResponseEntity<>(null, exception.getHttpStatus());
+        } catch (ModelExceptions modelError) {
+            System.out.println(modelError.getMessage());
+            return new ResponseEntity<>(null, modelError.getHttpStatus());
         }catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);}}
 
@@ -109,8 +115,9 @@ public class AccountResource {
         try {
             authService.authorize(token);
             return new ResponseEntity<>(accountResponse(service.searchById(id)), HttpStatus.OK);
-        } catch (ModelExceptions exception) {
-            return new ResponseEntity<>(null, exception.getHttpStatus());
+        } catch (ModelExceptions modelError) {
+            System.out.println(modelError.getMessage());
+            return new ResponseEntity<>(null, modelError.getHttpStatus());
         }catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);}}
 
@@ -120,8 +127,9 @@ public class AccountResource {
         try {
             authService.authorize(token);
             return new ResponseEntity<>(accountResponse(service.getBalanceAccounts()), HttpStatus.OK);
-        }catch (ModelExceptions exception) {
-            return new ResponseEntity<>(null, exception.getHttpStatus());
+        }catch (ModelExceptions modelError) {
+            System.out.println(modelError.getMessage());
+            return new ResponseEntity<>(null, modelError.getHttpStatus());
         }catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);}}
 
@@ -133,8 +141,9 @@ public class AccountResource {
             Map<String, Double> response = new HashMap<>();
             response.put("balance", service.lastBalance(id));
             return new ResponseEntity<>(response,HttpStatus.OK);
-        }catch (ModelExceptions exception) {
-            return new ResponseEntity<>(null, exception.getHttpStatus());
+        }catch (ModelExceptions modelError) {
+            System.out.println(modelError.getMessage());
+            return new ResponseEntity<>(null, modelError.getHttpStatus());
         }catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);}}
 
@@ -147,8 +156,9 @@ public class AccountResource {
             Map<String, Double> response = new HashMap<>();
             response.put("results", service.results());
             return new ResponseEntity<>(response,HttpStatus.OK);
-        }catch (ModelExceptions exception) {
-            return new ResponseEntity<>(null, exception.getHttpStatus());
+        }catch (ModelExceptions modelError) {
+            System.out.println(modelError.getMessage());
+            return new ResponseEntity<>(null, modelError.getHttpStatus());
         }catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);}}
 
@@ -160,8 +170,9 @@ public class AccountResource {
             Map<String, Double> response = new HashMap<>();
             response.put("equity", service.equity());
             return new ResponseEntity<>(response,HttpStatus.OK);
-        }catch (ModelExceptions exception) {
-            return new ResponseEntity<>(null, exception.getHttpStatus());
+        }catch (ModelExceptions modelError) {
+            System.out.println(modelError.getMessage());
+            return new ResponseEntity<>(null, modelError.getHttpStatus());
         }catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);}}
 

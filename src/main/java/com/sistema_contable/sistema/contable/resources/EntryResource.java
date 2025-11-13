@@ -32,8 +32,9 @@ public class EntryResource {
             User userDB = authService.authorize(token);
             service.create(mapper.map(entryDTO, Entry.class), userDB);
             return new ResponseEntity<>(null, HttpStatus.CREATED);
-        } catch (ModelExceptions exception){
-            return new ResponseEntity<>(null, exception.getHttpStatus());
+        } catch (ModelExceptions modelError) {
+            System.out.println(modelError.getMessage());
+            return new ResponseEntity<>(null, modelError.getHttpStatus());
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

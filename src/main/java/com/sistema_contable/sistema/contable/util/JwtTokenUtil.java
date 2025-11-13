@@ -32,8 +32,7 @@ public class JwtTokenUtil {
         try {
             return JWT.decode(token.replace(TOKEN_PREFIX, "")).getSubject();
         }catch (Exception e){
-            System.out.print("Error searching for subject in the token");
-            throw new AuthorizationException();
+            throw new AuthorizationException("Error searching for subject in the token");
         }
     }
 

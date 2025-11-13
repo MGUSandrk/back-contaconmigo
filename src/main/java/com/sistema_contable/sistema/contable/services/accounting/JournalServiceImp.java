@@ -22,7 +22,7 @@ public class JournalServiceImp implements JournalService {
     public List<Entry> getLastEntrys()throws Exception{
         List<Entry> entrys = entryRepository.lastEntrys();
         if(entrys.isEmpty()){
-            throw new EntryNotFindException();
+            throw new EntryNotFindException("Not found entrys");
         }
         Collections.reverse(entrys);
         return entrys;
@@ -31,7 +31,7 @@ public class JournalServiceImp implements JournalService {
     @Override
     public List<Entry> getJournalBetween(Date before, Date after) throws Exception{
         List<Entry> entrys = entryRepository.findBetweenDate(before,after);
-        if(entrys.isEmpty()){throw new EntryNotFindException();}
+        if(entrys.isEmpty()){throw new EntryNotFindException("Not found entry between dates");}
         return entrys;
     }
 }
