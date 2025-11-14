@@ -62,4 +62,5 @@ src/.DS_STORE
 
 # Ignorar configuraciones locales o secretos si no usas variables de entorno
 # (Descomenta la siguiente linea si tienes un archivo de propiedades con claves reales)
-# src/main/resources/application-secret.properties
+src/main/resources/application-dev.properties
+
