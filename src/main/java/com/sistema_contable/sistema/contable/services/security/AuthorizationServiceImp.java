@@ -25,7 +25,7 @@ public class AuthorizationServiceImp implements AuthorizationService {
         //search the user in the db
         User userDB = service.findByUsername(jwtTokenUtil.getSubject(token));
         //check the token and the user existence in the db
-        if (!jwtTokenUtil.verify(token) || userDB == null ){throw new AuthorizationException("Invalid token or User not found");}
+        if (!jwtTokenUtil.verify(token) || userDB == null ){throw new AuthorizationException("ERROR : Invalid token or User not found");}
         else{return userDB;}
     }
 
@@ -34,7 +34,7 @@ public class AuthorizationServiceImp implements AuthorizationService {
         //search the user in the db
         User userDB = service.findByUsername(jwtTokenUtil.getSubject(token));
         //check the token, user existence and the role
-        if (!jwtTokenUtil.verify(token) || userDB == null || !userDB.getRole().equals(Role.ADMIN)){throw new AuthorizationException("Invalid token or User not role required");}
+        if (!jwtTokenUtil.verify(token) || userDB == null || !userDB.getRole().equals(Role.ADMIN)){throw new AuthorizationException("ERROR : Invalid token or User not role required");}
         else{return userDB;}
     }
 

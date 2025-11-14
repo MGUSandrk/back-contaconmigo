@@ -18,7 +18,7 @@ public class LedgerServiceImp implements LedgerService {
 
     public List<Movement> LadgerByAccountBetweem(Long accountID, Date before, Date after)throws Exception{
         List<Movement> movements = movementRepository.ledgerAccountBetween(accountID, before, after);
-        if(movements.isEmpty()){throw new EntryNotFindException("Not found entrys by account between dates");}
+        if(movements.isEmpty()){throw new EntryNotFindException("ERROR : Not found entrys by account between dates");}
         return movements;
     }
 }

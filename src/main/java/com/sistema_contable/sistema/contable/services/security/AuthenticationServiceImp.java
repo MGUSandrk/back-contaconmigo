@@ -28,7 +28,7 @@ public class AuthenticationServiceImp implements AuthenticationService {
         User userDB = userService.findByUsername(user.getUsername());
         //check if the user exist and the password
         if(userDB==null || !passwordEncoder.verify(user.getPassword(), userDB.getPassword()))
-            {throw new AuthenticationException("Failed to check credentials");}
+            {throw new AuthenticationException("ERROR : Failed to check credentials");}
         else{return jwtTokenUtil.generateToken(user.getUsername(), userDB.getRole().name());}
     }
 }

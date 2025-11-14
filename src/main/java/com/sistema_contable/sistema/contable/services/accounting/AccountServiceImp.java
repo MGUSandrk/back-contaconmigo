@@ -32,12 +32,12 @@ public class AccountServiceImp implements AccountService {
         //set the state off the account in true/active
         account.setActive(true);
         //check that there are no accounts with the same name
-        if(this.searchByName(account.getName())!=null) {throw new AccountNotFindException("Found account with same name");}
+        if(this.searchByName(account.getName())!=null) {throw new AccountNotFindException("ERROR : Found account with same name");}
         //new account with father
         if(accountID!=null){
             //search in db the "father" account
             ControlAccount accountBD = this.searchControlAccount(accountID);
-            if(accountBD==null){throw new AccountNotFindException("Father account not found");}
+            if(accountBD==null){throw new AccountNotFindException("ERROR : Father account not found");}
             accountBD.addChildren(account);
             account.setPlus(accountBD.isPlus());
             repository.save(accountBD);}
@@ -58,7 +58,7 @@ public class AccountServiceImp implements AccountService {
                 repository.save(account);}
             else{//physical delete
                 repository.deleteAccountById(id);}}
-        else {throw new AccountNotFindException("Account not found to DELETE");}}
+        else {throw new AccountNotFindException("ERROR : Account not found to DELETE");}}
 
     //activate
     @Override
@@ -67,12 +67,12 @@ public class AccountServiceImp implements AccountService {
             Account account = this.searchById(id);
             account.activate();
             repository.save(account);}
-        else{throw new AccountNotFindException("Account not found to ACTIVATE");}}
+        else{throw new AccountNotFindException("ERROR : Account not found to ACTIVATE");}}
 
     //update the name of the account
     @Override
     public void update(Long id, String nombre) throws Exception {
-        if(this.searchByName(nombre)!=null){throw new BadAccountException("Account not found to UPDATE");}
+        if(this.searchByName(nombre)!=null){throw new BadAccountException("ERROR : Account not found to UPDATE");}
         Account account = this.searchById(id);
         account.setName(nombre);
         repository.save(account);}
@@ -121,7 +121,7 @@ public class AccountServiceImp implements AccountService {
     @Override
     public Account searchById(Long id) throws Exception{
         Account account = repository.searchById(id);
-        if(account==null){throw new AccountNotFindException("Account not found by id");}
+        if(account==null){throw new AccountNotFindException("ERROR : Account not found by id");}
         else{return account;}}
 
     //by name

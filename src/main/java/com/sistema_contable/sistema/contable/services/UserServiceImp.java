@@ -24,7 +24,7 @@ public class UserServiceImp implements UserService{
     public void create(User user) throws Exception{
         User userCheck = repository.findByUsername(user.getUsername());
         if(userCheck!=null){ // username exist dont create user or user dont admin
-            throw new UsernNameErrorException("Username exist in DB");
+            throw new UsernNameErrorException("ERROR : Username exist in DB");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         repository.save(user);
@@ -34,7 +34,7 @@ public class UserServiceImp implements UserService{
     public User findByUsername(String username) throws Exception{
         User userDB = repository.findByUsername(username);
         if(repository.findByUsername(username) == null) {
-            throw new UserNotFindException("Not found User by username");
+            throw new UserNotFindException("ERROR : Not found User by username");
         }
         return userDB;
     }
@@ -47,6 +47,6 @@ public class UserServiceImp implements UserService{
     @Override
     public void delete(Long id) throws Exception {
         if(repository.findById(id).isPresent()){repository.deleteById(id);}
-        else{throw new UserNotFindException("Not found User to DELETE");}
+        else{throw new UserNotFindException("ERROR : Not found User to DELETE");}
     }
 }
