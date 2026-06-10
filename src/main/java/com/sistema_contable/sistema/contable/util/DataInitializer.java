@@ -22,12 +22,17 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        //if users table are empty add the admin
-        if (userService.getAll().isEmpty()){
+        try {
+            //if users table are empty add the admin
+            if (userService.getAll().isEmpty()){
+                addUsers();
+            }
+            //if accounts table are empty add the basic set of account
+            if (accountService.getAll().isEmpty()){
+                addAccounts();
+            }
+        } catch (Exception e) {
             addUsers();
-        }
-        //if accounts table are empty add the basic set of account
-        if (accountService.getAll().isEmpty()){
             addAccounts();
         }
     }
