@@ -2,7 +2,7 @@ package com.sistema_contable.sistema.contable.resources;
 
 import com.sistema_contable.sistema.contable.dto.EntryResponseDTO;
 import com.sistema_contable.sistema.contable.exceptions.ModelExceptions;
-import com.sistema_contable.sistema.contable.model.Entry;
+import com.sistema_contable.sistema.contable.model.accounting.Entry;
 import com.sistema_contable.sistema.contable.services.accounting.interfaces.JournalService;
 import com.sistema_contable.sistema.contable.services.security.interfaces.AuthorizationService;
 import com.sistema_contable.sistema.contable.util.DateFormatter;

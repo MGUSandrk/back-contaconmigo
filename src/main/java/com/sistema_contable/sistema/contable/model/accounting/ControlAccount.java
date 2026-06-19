@@ -1,4 +1,4 @@
-package com.sistema_contable.sistema.contable.model;
+package com.sistema_contable.sistema.contable.model.accounting;
 
 import jakarta.persistence.*;
 

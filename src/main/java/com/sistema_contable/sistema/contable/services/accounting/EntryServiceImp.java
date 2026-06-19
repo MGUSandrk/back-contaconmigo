@@ -4,6 +4,9 @@ import com.sistema_contable.sistema.contable.exceptions.AccountNotActiveExceptio
 import com.sistema_contable.sistema.contable.exceptions.AccountNotFindException;
 import com.sistema_contable.sistema.contable.exceptions.NotEnoughBalanceException;
 import com.sistema_contable.sistema.contable.model.*;
+import com.sistema_contable.sistema.contable.model.accounting.BalanceAccount;
+import com.sistema_contable.sistema.contable.model.accounting.Entry;
+import com.sistema_contable.sistema.contable.model.accounting.Movement;
 import com.sistema_contable.sistema.contable.repository.EntryRepository;
 import com.sistema_contable.sistema.contable.services.accounting.interfaces.AccountService;
 import com.sistema_contable.sistema.contable.services.accounting.interfaces.EntryService;

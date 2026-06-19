@@ -1,6 +1,9 @@
 package com.sistema_contable.sistema.contable.util;
 
 import com.sistema_contable.sistema.contable.model.*;
+import com.sistema_contable.sistema.contable.model.accounting.Account;
+import com.sistema_contable.sistema.contable.model.accounting.BalanceAccount;
+import com.sistema_contable.sistema.contable.model.accounting.ControlAccount;
 import com.sistema_contable.sistema.contable.services.UserService;
 import com.sistema_contable.sistema.contable.services.accounting.interfaces.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;

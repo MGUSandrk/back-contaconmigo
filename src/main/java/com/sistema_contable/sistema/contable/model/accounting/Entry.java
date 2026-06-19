@@ -1,5 +1,6 @@
-package com.sistema_contable.sistema.contable.model;
+package com.sistema_contable.sistema.contable.model.accounting;
 
+import com.sistema_contable.sistema.contable.model.User;
 import jakarta.persistence.*;
 
 import java.util.Date;

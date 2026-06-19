@@ -1,7 +1,7 @@
 package com.sistema_contable.sistema.contable.services.accounting;
 
 import com.sistema_contable.sistema.contable.exceptions.EntryNotFindException;
-import com.sistema_contable.sistema.contable.model.Entry;
+import com.sistema_contable.sistema.contable.model.accounting.Entry;
 import com.sistema_contable.sistema.contable.repository.EntryRepository;
 import com.sistema_contable.sistema.contable.services.accounting.interfaces.JournalService;
 import org.springframework.beans.factory.annotation.Autowired;

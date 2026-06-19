@@ -1,4 +1,4 @@
-package com.sistema_contable.sistema.contable.model;
+package com.sistema_contable.sistema.contable.model.accounting;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -8,7 +8,7 @@ import java.util.List;
 
 @Entity
 @DiscriminatorValue("balance")
-public class BalanceAccount extends Account{
+public class BalanceAccount extends Account {
 
     //abstract methods
     @Override

@@ -1,7 +1,7 @@
 package com.sistema_contable.sistema.contable.services.accounting;
 
 import com.sistema_contable.sistema.contable.exceptions.EntryNotFindException;
-import com.sistema_contable.sistema.contable.model.Movement;
+import com.sistema_contable.sistema.contable.model.accounting.Movement;
 import com.sistema_contable.sistema.contable.repository.MovementRepository;
 import com.sistema_contable.sistema.contable.services.accounting.interfaces.LedgerService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -3,7 +3,7 @@ package com.sistema_contable.sistema.contable.resources;
 import com.sistema_contable.sistema.contable.dto.EntryRequestDTO;
 import com.sistema_contable.sistema.contable.dto.Mapper;
 import com.sistema_contable.sistema.contable.exceptions.ModelExceptions;
-import com.sistema_contable.sistema.contable.model.Entry;
+import com.sistema_contable.sistema.contable.model.accounting.Entry;
 import com.sistema_contable.sistema.contable.model.User;
 import com.sistema_contable.sistema.contable.services.accounting.interfaces.EntryService;
 import com.sistema_contable.sistema.contable.services.security.interfaces.AuthorizationService;

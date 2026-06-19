@@ -4,7 +4,7 @@ import com.sistema_contable.sistema.contable.dto.LedgerResponseDTO;
 import com.sistema_contable.sistema.contable.dto.Mapper;
 import com.sistema_contable.sistema.contable.dto.MovementLedgerResponseDTO;
 import com.sistema_contable.sistema.contable.exceptions.ModelExceptions;
-import com.sistema_contable.sistema.contable.model.Movement;
+import com.sistema_contable.sistema.contable.model.accounting.Movement;
 import com.sistema_contable.sistema.contable.services.accounting.interfaces.LedgerService;
 import com.sistema_contable.sistema.contable.services.security.interfaces.AuthorizationService;
 import com.sistema_contable.sistema.contable.util.DateFormatter;

@@ -2,9 +2,9 @@ package com.sistema_contable.sistema.contable.services.accounting;
 
 import com.sistema_contable.sistema.contable.exceptions.AccountNotFindException;
 import com.sistema_contable.sistema.contable.exceptions.BadAccountException;
-import com.sistema_contable.sistema.contable.model.Account;
-import com.sistema_contable.sistema.contable.model.BalanceAccount;
-import com.sistema_contable.sistema.contable.model.ControlAccount;
+import com.sistema_contable.sistema.contable.model.accounting.Account;
+import com.sistema_contable.sistema.contable.model.accounting.BalanceAccount;
+import com.sistema_contable.sistema.contable.model.accounting.ControlAccount;
 import com.sistema_contable.sistema.contable.repository.AccountRepository;
 import com.sistema_contable.sistema.contable.services.accounting.interfaces.AccountService;
 import com.sistema_contable.sistema.contable.services.accounting.interfaces.MovementService;

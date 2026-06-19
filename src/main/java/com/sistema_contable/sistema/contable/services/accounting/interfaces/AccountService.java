@@ -1,8 +1,8 @@
 package com.sistema_contable.sistema.contable.services.accounting.interfaces;
 
-import com.sistema_contable.sistema.contable.model.Account;
-import com.sistema_contable.sistema.contable.model.BalanceAccount;
-import com.sistema_contable.sistema.contable.model.ControlAccount;
+import com.sistema_contable.sistema.contable.model.accounting.Account;
+import com.sistema_contable.sistema.contable.model.accounting.BalanceAccount;
+import com.sistema_contable.sistema.contable.model.accounting.ControlAccount;
 
 import java.util.List;
 

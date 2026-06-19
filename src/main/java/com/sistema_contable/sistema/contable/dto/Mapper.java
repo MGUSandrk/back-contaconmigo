@@ -1,8 +1,8 @@
 package com.sistema_contable.sistema.contable.dto;
 
-import com.sistema_contable.sistema.contable.model.Account;
-import com.sistema_contable.sistema.contable.model.Entry;
-import com.sistema_contable.sistema.contable.model.Movement;
+import com.sistema_contable.sistema.contable.model.accounting.Account;
+import com.sistema_contable.sistema.contable.model.accounting.Entry;
+import com.sistema_contable.sistema.contable.model.accounting.Movement;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 

@@ -1,6 +1,9 @@
-package com.sistema_contable.sistema.contable.model;
+package com.sistema_contable.sistema.contable.model.accounting;
 
+import com.sistema_contable.sistema.contable.model.Product;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "movements")
@@ -18,7 +21,8 @@ public class Movement{
     @Column(name = "debit")
     private Double debit;
 
-    @Column(name = "credit")
+    @ManyToMany
+    private List<Product> products;    @Column(name = "credit")
     private Double credit;
 
     @ManyToOne
