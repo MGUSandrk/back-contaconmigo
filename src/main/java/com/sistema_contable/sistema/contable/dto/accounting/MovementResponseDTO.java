@@ -1,6 +1,6 @@
-package com.sistema_contable.sistema.contable.dto;
+package com.sistema_contable.sistema.contable.dto.accounting;
 
-public class MovementLedgerResponseDTO {
+public class MovementResponseDTO {
 
     private Long id;
     private String account;
@@ -8,7 +8,6 @@ public class MovementLedgerResponseDTO {
     private Double credit;
     private Double accountBalance;
     private String dateCreated;
-    private String description;
 
     public Long getId() {
         return id;
@@ -40,8 +39,4 @@ public class MovementLedgerResponseDTO {
 
     public String getDateCreated() {return dateCreated;}
     public void setDateCreated(String dateCreated) {this.dateCreated = dateCreated;}
-
-    public String getDescription() {return description;}
-    public void setDescription(String description) {this.description = description;}
-
 }

@@ -1,13 +1,25 @@
 package com.sistema_contable.sistema.contable.model;
 
-import com.sistema_contable.sistema.contable.model.consting_method.CostingMethod;
-import jakarta.persistence.*;
-
 import java.util.Date;
+import java.util.List;
 
-@jakarta.persistence.Entity
+import com.sistema_contable.sistema.contable.model.costing_method.CostingMethod;
+import com.sistema_contable.sistema.contable.model.sales.Payment;
+import com.sistema_contable.sistema.contable.model.sales.Sale;
+import com.sistema_contable.sistema.contable.model.sales.SaleProduct;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
+@Entity
 @Table(name = "entities")
-public class Entity {
+public class EntityModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,5 +55,9 @@ public class Entity {
 
     public void setCostingMethod(CostingMethod costingMethod) {
         this.costingMethod = costingMethod;
+    }
+
+    public void sell(User seller, Client client, List<SaleProduct> products, List<Payment> payments){
+        Sale sale = new Sale(new Date(), client, seller, products, payments);
     }
 }

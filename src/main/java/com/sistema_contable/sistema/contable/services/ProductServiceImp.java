@@ -1,15 +1,17 @@
 package com.sistema_contable.sistema.contable.services;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.sistema_contable.sistema.contable.exceptions.BadLotException;
 import com.sistema_contable.sistema.contable.exceptions.BadProductException;
 import com.sistema_contable.sistema.contable.exceptions.ProductNotFindException;
 import com.sistema_contable.sistema.contable.model.Lot;
 import com.sistema_contable.sistema.contable.model.Product;
 import com.sistema_contable.sistema.contable.repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
+import com.sistema_contable.sistema.contable.services.interfaces.ProductService;
 
 @Service
 public class ProductServiceImp implements ProductService {
@@ -28,6 +30,7 @@ public class ProductServiceImp implements ProductService {
         if (this.searchByName(product.getName()) != null) {
             throw new BadProductException("ERROR : Found product with same name");
         }
+        
         for (Lot lot : product.getLots()) {
             this.validateLot(lot);
             lot.setProduct(product);
@@ -92,4 +95,6 @@ public class ProductServiceImp implements ProductService {
             throw new BadLotException("ERROR : Lot stock is invalid");
         }
     }
+
+    
 }

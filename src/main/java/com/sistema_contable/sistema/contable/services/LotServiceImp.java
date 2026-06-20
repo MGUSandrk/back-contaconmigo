@@ -1,10 +1,12 @@
 package com.sistema_contable.sistema.contable.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.sistema_contable.sistema.contable.exceptions.LotNotFindException;
 import com.sistema_contable.sistema.contable.model.Lot;
 import com.sistema_contable.sistema.contable.repository.LotRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.sistema_contable.sistema.contable.services.interfaces.LotService;
 
 @Service
 public class LotServiceImp implements LotService {

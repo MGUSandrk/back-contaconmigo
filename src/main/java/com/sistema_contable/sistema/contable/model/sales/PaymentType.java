@@ -1,9 +1,16 @@
 package com.sistema_contable.sistema.contable.model.sales;
 
 import com.sistema_contable.sistema.contable.model.accounting.BalanceAccount;
-import jakarta.persistence.*;
 
-@Entity
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
+@jakarta.persistence.Entity
 @Table (name = "payment_types")
 public class PaymentType {
     @Id

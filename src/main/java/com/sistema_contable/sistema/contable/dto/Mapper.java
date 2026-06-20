@@ -1,12 +1,19 @@
 package com.sistema_contable.sistema.contable.dto;
 
-import com.sistema_contable.sistema.contable.model.accounting.Account;
-import com.sistema_contable.sistema.contable.model.accounting.Entry;
-import com.sistema_contable.sistema.contable.model.accounting.Movement;
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import com.sistema_contable.sistema.contable.dto.accounting.AccountResponseDTO;
+import com.sistema_contable.sistema.contable.dto.accounting.EntryRequestDTO;
+import com.sistema_contable.sistema.contable.dto.accounting.EntryResponseDTO;
+import com.sistema_contable.sistema.contable.dto.accounting.MovementLedgerResponseDTO;
+import com.sistema_contable.sistema.contable.dto.accounting.MovementRequestDTO;
+import com.sistema_contable.sistema.contable.dto.accounting.MovementResponseDTO;
+import com.sistema_contable.sistema.contable.model.accounting.Account;
+import com.sistema_contable.sistema.contable.model.accounting.Entry;
+import com.sistema_contable.sistema.contable.model.accounting.Movement;
 
 @Component
 public class Mapper extends ModelMapper {

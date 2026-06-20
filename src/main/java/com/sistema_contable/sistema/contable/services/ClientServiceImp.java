@@ -1,13 +1,15 @@
 package com.sistema_contable.sistema.contable.services;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.sistema_contable.sistema.contable.exceptions.BadClientException;
 import com.sistema_contable.sistema.contable.exceptions.ClientNotFindException;
 import com.sistema_contable.sistema.contable.model.Client;
 import com.sistema_contable.sistema.contable.repository.ClientRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
+import com.sistema_contable.sistema.contable.services.interfaces.ClientService;
 
 @Service
 public class ClientServiceImp implements ClientService {

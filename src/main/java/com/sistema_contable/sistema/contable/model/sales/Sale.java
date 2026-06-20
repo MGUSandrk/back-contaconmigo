@@ -1,11 +1,21 @@
 package com.sistema_contable.sistema.contable.model.sales;
 
-import com.sistema_contable.sistema.contable.model.Client;
-import com.sistema_contable.sistema.contable.model.User;
-import jakarta.persistence.*;
-
 import java.util.Date;
 import java.util.List;
+
+import com.sistema_contable.sistema.contable.model.Client;
+import com.sistema_contable.sistema.contable.model.User;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "sales")
@@ -38,6 +48,15 @@ public class Sale {
     @Column(name = "total_price")
     private Double totalPrice;
 
+    public Sale(){}
+
+    public Sale(Date dateCreated, Client client, User seller, List<SaleProduct> saleProducts, List<Payment> payments) {
+        this.dateCreated = dateCreated;
+        this.client = client;
+        this.seller = seller;
+        this.saleProducts = saleProducts;
+        this.payments = payments;
+    }
 
     public void addPayment(Payment payment){
         this.getPayments().add(payment);

@@ -4,6 +4,7 @@ import com.sistema_contable.sistema.contable.exceptions.UserNotFindException;
 import com.sistema_contable.sistema.contable.exceptions.UsernNameErrorException;
 import com.sistema_contable.sistema.contable.model.User;
 import com.sistema_contable.sistema.contable.repository.UserRepository;
+import com.sistema_contable.sistema.contable.services.interfaces.UserService;
 import com.sistema_contable.sistema.contable.util.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

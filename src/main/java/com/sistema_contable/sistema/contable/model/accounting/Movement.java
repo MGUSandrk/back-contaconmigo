@@ -1,9 +1,13 @@
 package com.sistema_contable.sistema.contable.model.accounting;
 
-import com.sistema_contable.sistema.contable.model.Product;
-import jakarta.persistence.*;
-
-import java.util.List;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "movements")
@@ -20,9 +24,8 @@ public class Movement{
 
     @Column(name = "debit")
     private Double debit;
-
-    @ManyToMany
-    private List<Product> products;    @Column(name = "credit")
+    
+    @Column(name = "credit")
     private Double credit;
 
     @ManyToOne
@@ -42,7 +45,7 @@ public class Movement{
     }
 
     //account
-    public Account getAccount() {
+    public BalanceAccount getAccount() {
         return account;
     }
     public void setAccount(BalanceAccount account) {

@@ -1,13 +1,14 @@
 package com.sistema_contable.sistema.contable.services.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.sistema_contable.sistema.contable.exceptions.AuthorizationException;
 import com.sistema_contable.sistema.contable.model.Role;
 import com.sistema_contable.sistema.contable.model.User;
-import com.sistema_contable.sistema.contable.services.UserService;
+import com.sistema_contable.sistema.contable.services.interfaces.UserService;
 import com.sistema_contable.sistema.contable.services.security.interfaces.AuthorizationService;
 import com.sistema_contable.sistema.contable.util.JwtTokenUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 public class AuthorizationServiceImp implements AuthorizationService {

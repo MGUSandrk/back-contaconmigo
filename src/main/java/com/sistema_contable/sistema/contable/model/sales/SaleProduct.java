@@ -1,9 +1,16 @@
 package com.sistema_contable.sistema.contable.model.sales;
 
 import com.sistema_contable.sistema.contable.model.Product;
-import jakarta.persistence.*;
 
-@Entity
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
+@jakarta.persistence.Entity
 @Table(name = "sale_products")
 public class SaleProduct {
     @Id
@@ -20,7 +27,6 @@ public class SaleProduct {
 
     @Column(name = "price")
     private Double price;
-
 
     public Long getId() {
         return id;

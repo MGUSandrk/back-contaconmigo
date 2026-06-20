@@ -1,4 +1,4 @@
-package com.sistema_contable.sistema.contable.dto;
+package com.sistema_contable.sistema.contable.dto.accounting;
 
 public class AccountRequestDTO {
 
