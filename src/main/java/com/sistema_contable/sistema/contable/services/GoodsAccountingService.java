@@ -53,5 +53,4 @@ public class GoodsAccountingService {
 
     entryService.create(entry, user);
   }
-
 }
