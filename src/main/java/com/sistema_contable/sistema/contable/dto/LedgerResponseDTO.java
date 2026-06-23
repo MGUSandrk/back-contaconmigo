@@ -1,7 +1,5 @@
 package com.sistema_contable.sistema.contable.dto;
 
-import com.sistema_contable.sistema.contable.model.Movement;
-
 import java.util.List;
 
 public class LedgerResponseDTO {
