@@ -1,11 +1,16 @@
 package com.sistema_contable.sistema.contable.util;
 
-import com.sistema_contable.sistema.contable.model.*;
-import com.sistema_contable.sistema.contable.services.UserService;
-import com.sistema_contable.sistema.contable.services.accounting.interfaces.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
+import com.sistema_contable.sistema.contable.model.Role;
+import com.sistema_contable.sistema.contable.model.User;
+import com.sistema_contable.sistema.contable.model.accounting.Account;
+import com.sistema_contable.sistema.contable.model.accounting.BalanceAccount;
+import com.sistema_contable.sistema.contable.model.accounting.ControlAccount;
+import com.sistema_contable.sistema.contable.services.accounting.interfaces.AccountService;
+import com.sistema_contable.sistema.contable.services.interfaces.UserService;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
@@ -22,12 +27,17 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        //if users table are empty add the admin
-        if (userService.getAll().isEmpty()){
+        try {
+            //if users table are empty add the admin
+            if (userService.getAll().isEmpty()){
+                addUsers();
+            }
+            //if accounts table are empty add the basic set of account
+            if (accountService.getAll().isEmpty()){
+                addAccounts();
+            }
+        } catch (Exception e) {
             addUsers();
-        }
-        //if accounts table are empty add the basic set of account
-        if (accountService.getAll().isEmpty()){
             addAccounts();
         }
     }
@@ -81,6 +91,10 @@ public class DataInitializer implements CommandLineRunner {
         Account bienes  = new ControlAccount();
         bienes.setName("Bienes de cambio");
         accountService.create(bienes, 1L);
+
+        Account mercaderias  = new BalanceAccount();
+        mercaderias.setName("Mercaderías");
+        accountService.create(mercaderias, 9L);
 
         Account deudascom = new ControlAccount();
         deudascom.setName("Deudas de comerciales");

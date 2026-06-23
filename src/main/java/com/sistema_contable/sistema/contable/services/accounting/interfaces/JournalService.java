@@ -1,6 +1,6 @@
 package com.sistema_contable.sistema.contable.services.accounting.interfaces;
 
-import com.sistema_contable.sistema.contable.model.Entry;
+import com.sistema_contable.sistema.contable.model.accounting.Entry;
 
 import java.util.Date;
 import java.util.List;

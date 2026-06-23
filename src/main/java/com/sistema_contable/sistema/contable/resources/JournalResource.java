@@ -1,23 +1,24 @@
 package com.sistema_contable.sistema.contable.resources;
 
-import com.sistema_contable.sistema.contable.dto.EntryResponseDTO;
-import com.sistema_contable.sistema.contable.exceptions.ModelExceptions;
-import com.sistema_contable.sistema.contable.model.Entry;
-import com.sistema_contable.sistema.contable.model.User;
-import com.sistema_contable.sistema.contable.services.accounting.interfaces.JournalService;
-import com.sistema_contable.sistema.contable.services.security.interfaces.AuthorizationService;
-import com.sistema_contable.sistema.contable.util.DateFormatter;
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.List;
+import com.sistema_contable.sistema.contable.dto.accounting.EntryResponseDTO;
+import com.sistema_contable.sistema.contable.exceptions.ModelExceptions;
+import com.sistema_contable.sistema.contable.model.accounting.Entry;
+import com.sistema_contable.sistema.contable.services.accounting.interfaces.JournalService;
+import com.sistema_contable.sistema.contable.services.security.interfaces.AuthorizationService;
+import com.sistema_contable.sistema.contable.util.DateFormatter;
 
 @RestController
 @RequestMapping("/journal")
@@ -40,10 +41,11 @@ public class JournalResource {
     @GetMapping
     public ResponseEntity<?> getLastEntrys(@RequestHeader("Authorization") String token){
         try {
-            User userDB = authService.authorize(token);
+            authService.authorize(token);
             return new ResponseEntity<>(entryResponse(service.getLastEntrys()), HttpStatus.OK);
-        } catch (ModelExceptions exception) {
-            return new ResponseEntity<>(null, exception.getHttpStatus());
+        } catch (ModelExceptions modelError) {
+            System.out.println(modelError.getMessage());
+            return new ResponseEntity<>(null, modelError.getHttpStatus());
         }catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -55,14 +57,15 @@ public class JournalResource {
             @RequestParam("before") String before,
             @RequestParam("after")String after) {
         try {
-            User userDB = authService.authorize(token);
+            authService.authorize(token);
             return new ResponseEntity<>(
                     entryResponse(service.getJournalBetween(
                         dateFormatter.beforeDate(before),
                         dateFormatter.afterDate(after))),
                     HttpStatus.OK);
-        } catch (ModelExceptions exception) {
-            return new ResponseEntity<>(null, exception.getHttpStatus());
+        } catch (ModelExceptions modelError) {
+            System.out.println(modelError.getMessage());
+            return new ResponseEntity<>(null, modelError.getHttpStatus());
         }catch (Exception e) {
             System.out.println(e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

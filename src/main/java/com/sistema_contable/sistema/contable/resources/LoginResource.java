@@ -4,7 +4,6 @@ import com.sistema_contable.sistema.contable.dto.AuthenticationRequestDTO;
 import com.sistema_contable.sistema.contable.exceptions.ModelExceptions;
 import com.sistema_contable.sistema.contable.model.User;
 import com.sistema_contable.sistema.contable.services.security.interfaces.AuthenticationService;
-import com.sistema_contable.sistema.contable.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,12 +15,10 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/login")
-@CrossOrigin(origins = "${FRONT_URL}")
+@CrossOrigin(origins = "http://localhost:3000")
 public class LoginResource {
 
     //dependencies
-    @Autowired
-    private UserService service;
     @Autowired
     private ModelMapper mapper;
     @Autowired
@@ -34,10 +31,10 @@ public class LoginResource {
             Map<String, String> response = new HashMap<>();
             response.put("token", token);
             return new ResponseEntity<>(response, null, HttpStatus.OK);
-        } catch (ModelExceptions exception) {
-            return new ResponseEntity<>(null, exception.getHttpStatus());
+        } catch (ModelExceptions modelError) {
+            System.out.println(modelError.getMessage());
+            return new ResponseEntity<>(null, modelError.getHttpStatus());
         } catch (Exception e) {
-            System.out.print(e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

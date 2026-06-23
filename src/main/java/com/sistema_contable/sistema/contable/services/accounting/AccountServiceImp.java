@@ -2,23 +2,16 @@ package com.sistema_contable.sistema.contable.services.accounting;
 
 import com.sistema_contable.sistema.contable.exceptions.AccountNotFindException;
 import com.sistema_contable.sistema.contable.exceptions.BadAccountException;
-import com.sistema_contable.sistema.contable.exceptions.ResourceNotFindException;
-import com.sistema_contable.sistema.contable.model.Account;
-import com.sistema_contable.sistema.contable.model.BalanceAccount;
-import com.sistema_contable.sistema.contable.model.ControlAccount;
+import com.sistema_contable.sistema.contable.model.accounting.Account;
+import com.sistema_contable.sistema.contable.model.accounting.BalanceAccount;
+import com.sistema_contable.sistema.contable.model.accounting.ControlAccount;
 import com.sistema_contable.sistema.contable.repository.AccountRepository;
 import com.sistema_contable.sistema.contable.services.accounting.interfaces.AccountService;
-import com.sistema_contable.sistema.contable.services.accounting.interfaces.EntryService;
 import com.sistema_contable.sistema.contable.services.accounting.interfaces.MovementService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-
-import java.beans.Transient;
 import java.util.List;
 
 @Service
@@ -39,12 +32,12 @@ public class AccountServiceImp implements AccountService {
         //set the state off the account in true/active
         account.setActive(true);
         //check that there are no accounts with the same name
-        if(this.searchByName(account.getName())!=null) {throw new AccountNotFindException();}
+        if(this.searchByName(account.getName())!=null) {throw new AccountNotFindException("ERROR : Found account with same name");}
         //new account with father
         if(accountID!=null){
             //search in db the "father" account
             ControlAccount accountBD = this.searchControlAccount(accountID);
-            if(accountBD==null){throw new AccountNotFindException();}
+            if(accountBD==null){throw new AccountNotFindException("ERROR : Father account not found");}
             accountBD.addChildren(account);
             account.setPlus(accountBD.isPlus());
             repository.save(accountBD);}
@@ -65,7 +58,7 @@ public class AccountServiceImp implements AccountService {
                 repository.save(account);}
             else{//physical delete
                 repository.deleteAccountById(id);}}
-        else {throw new AccountNotFindException();}}
+        else {throw new AccountNotFindException("ERROR : Account not found to DELETE");}}
 
     //activate
     @Override
@@ -74,12 +67,12 @@ public class AccountServiceImp implements AccountService {
             Account account = this.searchById(id);
             account.activate();
             repository.save(account);}
-        else{throw new AccountNotFindException();}}
+        else{throw new AccountNotFindException("ERROR : Account not found to ACTIVATE");}}
 
     //update the name of the account
     @Override
     public void update(Long id, String nombre) throws Exception {
-        if(this.searchByName(nombre)!=null){throw new BadAccountException();}
+        if(this.searchByName(nombre)!=null){throw new BadAccountException("ERROR : Account not found to UPDATE");}
         Account account = this.searchById(id);
         account.setName(nombre);
         repository.save(account);}
@@ -128,7 +121,7 @@ public class AccountServiceImp implements AccountService {
     @Override
     public Account searchById(Long id) throws Exception{
         Account account = repository.searchById(id);
-        if(account==null){throw new AccountNotFindException();}
+        if(account==null){throw new AccountNotFindException("ERROR : Account not found by id");}
         else{return account;}}
 
     //by name

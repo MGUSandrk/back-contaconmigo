@@ -1,7 +1,7 @@
 package com.sistema_contable.sistema.contable.services.accounting;
 
 import com.sistema_contable.sistema.contable.exceptions.EntryNotFindException;
-import com.sistema_contable.sistema.contable.model.Movement;
+import com.sistema_contable.sistema.contable.model.accounting.Movement;
 import com.sistema_contable.sistema.contable.repository.MovementRepository;
 import com.sistema_contable.sistema.contable.services.accounting.interfaces.LedgerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class LedgerServiceImp implements LedgerService {
 
     public List<Movement> LadgerByAccountBetweem(Long accountID, Date before, Date after)throws Exception{
         List<Movement> movements = movementRepository.ledgerAccountBetween(accountID, before, after);
-        if(movements.isEmpty()){throw new EntryNotFindException();}
+        if(movements.isEmpty()){throw new EntryNotFindException("ERROR : Not found entrys by account between dates");}
         return movements;
     }
 }

@@ -4,14 +4,15 @@ import com.sistema_contable.sistema.contable.exceptions.AccountNotActiveExceptio
 import com.sistema_contable.sistema.contable.exceptions.AccountNotFindException;
 import com.sistema_contable.sistema.contable.exceptions.NotEnoughBalanceException;
 import com.sistema_contable.sistema.contable.model.*;
+import com.sistema_contable.sistema.contable.model.accounting.BalanceAccount;
+import com.sistema_contable.sistema.contable.model.accounting.Entry;
+import com.sistema_contable.sistema.contable.model.accounting.Movement;
 import com.sistema_contable.sistema.contable.repository.EntryRepository;
 import com.sistema_contable.sistema.contable.services.accounting.interfaces.AccountService;
 import com.sistema_contable.sistema.contable.services.accounting.interfaces.EntryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.Date;
-import java.util.List;
 
 @Service
 public class EntryServiceImp implements EntryService {
@@ -36,16 +37,14 @@ public class EntryServiceImp implements EntryService {
         for (Movement movement : entry.getMovements()){
             BalanceAccount account = accountService.searchBalanceAccount(movement.getAccount().getId());
             if(account==null){
-                System.out.println("Entry Service (configMovements) : Account not found");
-                throw new AccountNotFindException();}
+                throw new AccountNotFindException("ERROR : Account not find to set to movements");}
             else{
                 //check the state of account
-                if (!account.isActive()){throw new AccountNotActiveException();}
+                if (!account.isActive()){throw new AccountNotActiveException("ERROR : Account not active ot set to movements");}
                 movement.setEntry(entry);
                 movement.setAccount(account);
                 //check the balance of the account
                 if (!movement.balanceEnough(accountService.lastBalance(account.getId()))){
-                    System.out.println("Entry Service (configMovements) : not enough balance");
-                    throw new NotEnoughBalanceException();}
+                    throw new NotEnoughBalanceException("ERROR : ccount not enough balance to use in movements");}
                 movement.addAccountBalance(accountService.lastBalance(account.getId()));}}}
 }

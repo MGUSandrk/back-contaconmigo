@@ -4,6 +4,10 @@ import org.springframework.http.HttpStatus;
 
 public class AuthorizationException extends ModelExceptions{
 
+    public AuthorizationException(String message) {
+        super(message);
+    }
+
     @Override
     public HttpStatus getHttpStatus() {
         return HttpStatus.UNAUTHORIZED;

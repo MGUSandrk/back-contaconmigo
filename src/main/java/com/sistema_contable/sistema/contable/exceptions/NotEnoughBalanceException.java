@@ -1,9 +1,12 @@
 package com.sistema_contable.sistema.contable.exceptions;
 
-import ch.qos.logback.core.model.Model;
 import org.springframework.http.HttpStatus;
 
 public class NotEnoughBalanceException extends ModelExceptions {
+
+    public NotEnoughBalanceException(String message) {
+        super(message);
+    }
 
     @Override
     public HttpStatus getHttpStatus() {
