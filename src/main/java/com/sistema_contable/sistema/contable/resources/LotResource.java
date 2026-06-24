@@ -32,7 +32,7 @@ public class LotResource {
     @GetMapping(path = "/{id}", produces = "application/json")
     public ResponseEntity<?> getLotById(@RequestHeader("Authorization") String token, @PathVariable Long id) {
         try {
-            authService.adminAuthorize(token);
+            authService.sellerAuthorize(token);
             return new ResponseEntity<>(lotResponse(service.searchById(id)), HttpStatus.OK);
         } catch (ModelExceptions modelError) {
             System.out.println(modelError.getMessage());

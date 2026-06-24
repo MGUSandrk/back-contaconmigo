@@ -42,7 +42,7 @@ public class SaleResource {
     @PostMapping(path = "/create")
     public ResponseEntity<?> create(@RequestHeader("Authorization") String token, @RequestBody SaleRequestDTO saleDTO) {
         try {
-            User seller = authService.authorize(token);
+            User seller = authService.sellerAuthorize(token);
             service.create(saleRequest(saleDTO), seller);
             return new ResponseEntity<>(null, HttpStatus.CREATED);
         } catch (ModelExceptions modelError) {

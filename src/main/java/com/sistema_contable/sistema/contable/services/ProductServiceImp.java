@@ -68,6 +68,17 @@ public class ProductServiceImp implements ProductService {
         return repository.searchByName(name);
     }
 
+    @Override
+    public Integer totalStock(Product product) {
+        if (product == null || product.getLots() == null) {
+            return 0;
+        }
+        return product.getLots().stream()
+                .filter(lot -> lot != null && lot.getStock() != null)
+                .mapToInt(Lot::getStock)
+                .sum();
+    }
+
     //SECONDARY METHODS
     private void validateProduct(Product product) throws Exception {
         if (product == null) {

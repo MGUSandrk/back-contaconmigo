@@ -52,7 +52,7 @@ public class ClientResource {
     @GetMapping(produces = "application/json")
     public ResponseEntity<?> getAll(@RequestHeader("Authorization") String token) {
         try {
-            authService.adminAuthorize(token);
+            authService.sellerAuthorize(token);
             return new ResponseEntity<>(clientResponse(service.getAll()), HttpStatus.OK);
         } catch (ModelExceptions modelError) {
             System.out.println(modelError.getMessage());
@@ -65,7 +65,7 @@ public class ClientResource {
     @GetMapping(path = "/{id}", produces = "application/json")
     public ResponseEntity<?> getById(@RequestHeader("Authorization") String token, @PathVariable Long id) {
         try {
-            authService.adminAuthorize(token);
+            authService.sellerAuthorize(token);
             return new ResponseEntity<>(clientResponse(service.searchById(id)), HttpStatus.OK);
         } catch (ModelExceptions modelError) {
             System.out.println(modelError.getMessage());

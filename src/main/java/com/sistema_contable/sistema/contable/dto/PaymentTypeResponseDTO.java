@@ -7,6 +7,7 @@ public class PaymentTypeResponseDTO {
     private Long accountId;
     private String accountName;
     private String accountCode;
+    private Double balance;
 
     public Long getId() {
         return id;
@@ -46,5 +47,13 @@ public class PaymentTypeResponseDTO {
 
     public void setAccountCode(String accountCode) {
         this.accountCode = accountCode;
+    }
+
+    public Double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Double balance) {
+        this.balance = balance;
     }
 }
