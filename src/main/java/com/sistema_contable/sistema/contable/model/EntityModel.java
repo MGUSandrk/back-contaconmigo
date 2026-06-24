@@ -1,20 +1,14 @@
 package com.sistema_contable.sistema.contable.model;
 
-import java.util.Date;
-import java.util.List;
-
-import com.sistema_contable.sistema.contable.model.costing_method.CostingMethod;
-import com.sistema_contable.sistema.contable.model.sales.Payment;
-import com.sistema_contable.sistema.contable.model.sales.Sale;
-import com.sistema_contable.sistema.contable.model.sales.SaleProduct;
+import com.sistema_contable.sistema.contable.model.costing_method.CostingMethodType;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -29,9 +23,9 @@ public class EntityModel {
     @Column(name = "entity_name")
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "entity_costing_method_id")
-    private CostingMethod costingMethod;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "entity_costing_method")
+    private CostingMethodType costingMethod;
 
     public Long getId() {
         return id;
@@ -49,15 +43,12 @@ public class EntityModel {
         this.name = name;
     }
 
-    public CostingMethod getCostingMethod() {
+    public CostingMethodType getCostingMethod() {
         return costingMethod;
     }
 
-    public void setCostingMethod(CostingMethod costingMethod) {
+    public void setCostingMethod(CostingMethodType costingMethod) {
         this.costingMethod = costingMethod;
     }
 
-    public void sell(User seller, Client client, List<SaleProduct> products, List<Payment> payments){
-        Sale sale = new Sale(new Date(), client, seller, products, payments);
-    }
 }

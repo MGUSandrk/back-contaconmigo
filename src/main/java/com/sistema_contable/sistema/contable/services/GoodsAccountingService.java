@@ -31,8 +31,11 @@ public class GoodsAccountingService {
     // Search the goods Account
     Account goodsData = accountService.searchByName("Mercaderías");
     BalanceAccount goods = accountService.searchBalanceAccount(goodsData.getId());
+
+    // Create a movement for the goods account with the debit of the total cost of the goods
     Movement goodsMovement = new Movement();
     goodsMovement.setAccount(goods);
+
     // Set the credit of the movement with the total cost of the goods (unit price * stock)
     Double totalCost = product.getLots().stream().mapToDouble(lot -> lot.getUnitPrice() * lot.getStock()).sum();
     goodsMovement.setDebit(totalCost);
