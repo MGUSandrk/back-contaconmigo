@@ -2,6 +2,8 @@ package com.sistema_contable.sistema.contable.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -24,6 +26,20 @@ public class Client {
 
     @Column(name = "cuit")
     private String cuit;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "client_vat_condition")
+    private VatCondition vatCondition;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "client_document_type")
+    private DocumentType documentType;
+
+    @Column(name = "client_document_number")
+    private String documentNumber;
+
+    @Column(name = "client_commercial_address")
+    private String commercialAddress;
 
     public Long getId() {
         return id;
@@ -55,5 +71,37 @@ public class Client {
 
     public void setCuit(String cuit) {
         this.cuit = cuit;
+    }
+
+    public VatCondition getVatCondition() {
+        return vatCondition;
+    }
+
+    public void setVatCondition(VatCondition vatCondition) {
+        this.vatCondition = vatCondition;
+    }
+
+    public DocumentType getDocumentType() {
+        return documentType;
+    }
+
+    public void setDocumentType(DocumentType documentType) {
+        this.documentType = documentType;
+    }
+
+    public String getDocumentNumber() {
+        return documentNumber;
+    }
+
+    public void setDocumentNumber(String documentNumber) {
+        this.documentNumber = documentNumber;
+    }
+
+    public String getCommercialAddress() {
+        return commercialAddress;
+    }
+
+    public void setCommercialAddress(String commercialAddress) {
+        this.commercialAddress = commercialAddress;
     }
 }

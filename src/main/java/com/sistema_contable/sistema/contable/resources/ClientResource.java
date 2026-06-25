@@ -112,6 +112,10 @@ public class ClientResource {
         client.setFullName(dto.getFullName());
         client.setEmail(dto.getEmail());
         client.setCuit(dto.getCuit());
+        client.setVatCondition(dto.getVatCondition());
+        client.setDocumentType(dto.getDocumentType());
+        client.setDocumentNumber(dto.getDocumentNumber());
+        client.setCommercialAddress(dto.getCommercialAddress());
         return client;
     }
 
@@ -125,6 +129,10 @@ public class ClientResource {
         dto.setFullName(client.getFullName());
         dto.setEmail(client.getEmail());
         dto.setCuit(client.getCuit());
+        dto.setVatCondition(client.getVatCondition());
+        dto.setDocumentType(client.getDocumentType());
+        dto.setDocumentNumber(client.getDocumentNumber());
+        dto.setCommercialAddress(client.getCommercialAddress());
         return dto;
     }
 }

@@ -1,5 +1,7 @@
 package com.sistema_contable.sistema.contable.util;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -7,6 +9,7 @@ import org.springframework.stereotype.Component;
 import com.sistema_contable.sistema.contable.model.EntityModel;
 import com.sistema_contable.sistema.contable.model.Role;
 import com.sistema_contable.sistema.contable.model.User;
+import com.sistema_contable.sistema.contable.model.VatCondition;
 import com.sistema_contable.sistema.contable.model.accounting.Account;
 import com.sistema_contable.sistema.contable.model.accounting.BalanceAccount;
 import com.sistema_contable.sistema.contable.model.accounting.ControlAccount;
@@ -121,6 +124,12 @@ public class DataInitializer implements CommandLineRunner {
         EntityModel entity = new EntityModel();
         entity.setName("Empresa");
         entity.setCostingMethod(CostingMethodType.FIFO);
+        entity.setCuit("00000000000");
+        entity.setCommercialAddress("No configurado");
+        entity.setGrossIncomeNumber("NO CONTRIBUYENTE");
+        entity.setVatCondition(VatCondition.IVA_RESPONSABLE_INSCRIPTO);
+        entity.setActivityStartDate(new Date());
+        entity.setSalesPoint(1);
         entityService.create(entity);
     }
 }

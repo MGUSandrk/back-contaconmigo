@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.sistema_contable.sistema.contable.exceptions.BadClientException;
 import com.sistema_contable.sistema.contable.exceptions.ClientNotFindException;
 import com.sistema_contable.sistema.contable.model.Client;
+import com.sistema_contable.sistema.contable.model.VatCondition;
 import com.sistema_contable.sistema.contable.repository.ClientRepository;
 import com.sistema_contable.sistema.contable.services.interfaces.ClientService;
 
@@ -22,9 +23,7 @@ public class ClientServiceImp implements ClientService {
     @Override
     public void create(Client client) throws Exception {
         this.validateClient(client);
-        client.setFullName(client.getFullName().strip());
-        client.setEmail(client.getEmail().strip());
-        client.setCuit(client.getCuit().strip());
+        normalizeClient(client);
         repository.save(client);
     }
 
@@ -32,9 +31,13 @@ public class ClientServiceImp implements ClientService {
     public void modifyById(Long id, Client client) throws Exception {
         this.validateClient(client);
         Client storedClient = this.searchById(id);
-        storedClient.setFullName(client.getFullName().strip());
-        storedClient.setEmail(client.getEmail().strip());
-        storedClient.setCuit(client.getCuit().strip());
+        storedClient.setFullName(normalize(client.getFullName()));
+        storedClient.setEmail(normalize(client.getEmail()));
+        storedClient.setCuit(normalize(client.getCuit()));
+        storedClient.setVatCondition(client.getVatCondition());
+        storedClient.setDocumentType(client.getDocumentType());
+        storedClient.setDocumentNumber(normalize(client.getDocumentNumber()));
+        storedClient.setCommercialAddress(normalize(client.getCommercialAddress()));
         repository.save(storedClient);
     }
 
@@ -74,8 +77,31 @@ public class ClientServiceImp implements ClientService {
         if (client.getEmail() == null || client.getEmail().isBlank()) {
             throw new BadClientException("ERROR : Client email is required");
         }
-        if (client.getCuit() == null || client.getCuit().isBlank()) {
-            throw new BadClientException("ERROR : Client cuit is required");
+        if (client.getVatCondition() == null) {
+            throw new BadClientException("ERROR : Client vat condition is required");
         }
+        if (client.getVatCondition() != VatCondition.CONSUMIDOR_FINAL) {
+            if (client.getDocumentType() == null) {
+                throw new BadClientException("ERROR : Client document type is required");
+            }
+            if (client.getDocumentNumber() == null || client.getDocumentNumber().isBlank()) {
+                throw new BadClientException("ERROR : Client document number is required");
+            }
+            if (client.getCommercialAddress() == null || client.getCommercialAddress().isBlank()) {
+                throw new BadClientException("ERROR : Client commercial address is required");
+            }
+        }
+    }
+
+    private void normalizeClient(Client client) {
+        client.setFullName(normalize(client.getFullName()));
+        client.setEmail(normalize(client.getEmail()));
+        client.setCuit(normalize(client.getCuit()));
+        client.setDocumentNumber(normalize(client.getDocumentNumber()));
+        client.setCommercialAddress(normalize(client.getCommercialAddress()));
+    }
+
+    private String normalize(String value) {
+        return value == null ? null : value.strip();
     }
 }

@@ -24,12 +24,22 @@ public class EntityServiceImp implements EntityService {
         EntityModel storedEntity = this.getEntity();
         storedEntity.setName(entity.getName().strip());
         storedEntity.setCostingMethod(entity.getCostingMethod());
+        storedEntity.setCuit(entity.getCuit().strip());
+        storedEntity.setCommercialAddress(entity.getCommercialAddress().strip());
+        storedEntity.setGrossIncomeNumber(entity.getGrossIncomeNumber().strip());
+        storedEntity.setVatCondition(entity.getVatCondition());
+        storedEntity.setActivityStartDate(entity.getActivityStartDate());
+        storedEntity.setSalesPoint(entity.getSalesPoint());
         repository.save(storedEntity);
     }
 
     @Override
     public void create(EntityModel entity) throws Exception {
         this.validateEntity(entity);
+        entity.setName(entity.getName().strip());
+        entity.setCuit(entity.getCuit().strip());
+        entity.setCommercialAddress(entity.getCommercialAddress().strip());
+        entity.setGrossIncomeNumber(entity.getGrossIncomeNumber().strip());
         repository.save(entity);
     }
 
@@ -58,6 +68,24 @@ public class EntityServiceImp implements EntityService {
         }
         if (entity.getCostingMethod() == null) {
             throw new BadEntityException("ERROR : Entity costing method is required");
+        }
+        if (entity.getCuit() == null || entity.getCuit().isBlank()) {
+            throw new BadEntityException("ERROR : Entity cuit is required");
+        }
+        if (entity.getCommercialAddress() == null || entity.getCommercialAddress().isBlank()) {
+            throw new BadEntityException("ERROR : Entity commercial address is required");
+        }
+        if (entity.getGrossIncomeNumber() == null || entity.getGrossIncomeNumber().isBlank()) {
+            throw new BadEntityException("ERROR : Entity gross income number is required");
+        }
+        if (entity.getVatCondition() == null) {
+            throw new BadEntityException("ERROR : Entity vat condition is required");
+        }
+        if (entity.getActivityStartDate() == null) {
+            throw new BadEntityException("ERROR : Entity activity start date is required");
+        }
+        if (entity.getSalesPoint() == null || entity.getSalesPoint() <= 0) {
+            throw new BadEntityException("ERROR : Entity sales point is invalid");
         }
     }
 }

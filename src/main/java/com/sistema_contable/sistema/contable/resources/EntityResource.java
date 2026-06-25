@@ -65,6 +65,12 @@ public class EntityResource {
         EntityModel entity = new EntityModel();
         entity.setName(dto.getName());
         entity.setCostingMethod(dto.getCostingMethod());
+        entity.setCuit(dto.getCuit());
+        entity.setCommercialAddress(dto.getCommercialAddress());
+        entity.setGrossIncomeNumber(dto.getGrossIncomeNumber());
+        entity.setVatCondition(dto.getVatCondition());
+        entity.setActivityStartDate(dto.getActivityStartDate());
+        entity.setSalesPoint(dto.getSalesPoint());
         return entity;
     }
 
@@ -73,6 +79,12 @@ public class EntityResource {
         dto.setId(entity.getId());
         dto.setName(entity.getName());
         dto.setCostingMethod(entity.getCostingMethod());
+        dto.setCuit(entity.getCuit());
+        dto.setCommercialAddress(entity.getCommercialAddress());
+        dto.setGrossIncomeNumber(entity.getGrossIncomeNumber());
+        dto.setVatCondition(entity.getVatCondition());
+        dto.setActivityStartDate(entity.getActivityStartDate());
+        dto.setSalesPoint(entity.getSalesPoint());
         return dto;
     }
 }
