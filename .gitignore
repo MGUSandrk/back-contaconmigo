@@ -61,6 +61,10 @@ src/.DS_STORE
 *.p12
 *.jks
 
+# --- Documentos de configuracion para la IA y de versionado ---
+.windsurfrules
+AGENTS.md
+
 # Ignorar configuraciones locales o secretos si no usas variables de entorno
 # (Descomenta la siguiente linea si tienes un archivo de propiedades con claves reales)
 src/main/resources/application-dev.properties

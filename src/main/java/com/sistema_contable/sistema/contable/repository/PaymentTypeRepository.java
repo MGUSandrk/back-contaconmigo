@@ -11,4 +11,7 @@ public interface PaymentTypeRepository extends JpaRepository<PaymentType, Long> 
 
     @Query("SELECT p FROM PaymentType p WHERE p.id = :id")
     PaymentType searchById(@Param("id") Long id);
+
+    @Query("SELECT p FROM PaymentType p WHERE p.type = :type")
+    PaymentType searchByName(@Param("type") String type);
 }

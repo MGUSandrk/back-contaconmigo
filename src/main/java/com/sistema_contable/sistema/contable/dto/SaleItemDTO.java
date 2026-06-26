@@ -1,16 +1,16 @@
 package com.sistema_contable.sistema.contable.dto;
 
-public class SaleProductRequestDTO {
+public class SaleItemDTO {
 
-    private Long idProduct;
+    private Long productId;
     private Integer quantity;
 
-    public Long getIdProduct() {
-        return idProduct;
+    public Long getProductId() {
+        return productId;
     }
 
-    public void setIdProduct(Long idProduct) {
-        this.idProduct = idProduct;
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 
     public Integer getQuantity() {

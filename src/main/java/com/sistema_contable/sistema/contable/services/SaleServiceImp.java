@@ -1,22 +1,44 @@
 package com.sistema_contable.sistema.contable.services;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.sistema_contable.sistema.contable.exceptions.BadSaleException;
+import com.sistema_contable.sistema.contable.dto.InvoiceResponseDTO;
+import com.sistema_contable.sistema.contable.dto.SaleItemDTO;
+import com.sistema_contable.sistema.contable.dto.SaleRequestDTO;
+import com.sistema_contable.sistema.contable.exceptions.InsufficientStockException;
 import com.sistema_contable.sistema.contable.model.Client;
+import com.sistema_contable.sistema.contable.model.EntityModel;
+import com.sistema_contable.sistema.contable.model.Lot;
 import com.sistema_contable.sistema.contable.model.Product;
 import com.sistema_contable.sistema.contable.model.User;
+import com.sistema_contable.sistema.contable.model.accounting.Account;
+import com.sistema_contable.sistema.contable.model.accounting.BalanceAccount;
+import com.sistema_contable.sistema.contable.model.accounting.Entry;
+import com.sistema_contable.sistema.contable.model.accounting.Movement;
+import com.sistema_contable.sistema.contable.model.costing_method.CostingMethod;
+import com.sistema_contable.sistema.contable.model.costing_method.FIFO;
+import com.sistema_contable.sistema.contable.model.costing_method.LIFO;
+import com.sistema_contable.sistema.contable.model.costing_method.WAC;
+import com.sistema_contable.sistema.contable.model.sales.Invoice;
 import com.sistema_contable.sistema.contable.model.sales.Payment;
-import com.sistema_contable.sistema.contable.model.sales.PaymentType;
 import com.sistema_contable.sistema.contable.model.sales.Sale;
 import com.sistema_contable.sistema.contable.model.sales.SaleProduct;
+import com.sistema_contable.sistema.contable.repository.InvoiceRepository;
+import com.sistema_contable.sistema.contable.repository.LotRepository;
+import com.sistema_contable.sistema.contable.repository.PaymentTypeRepository;
+import com.sistema_contable.sistema.contable.repository.ProductRepository;
 import com.sistema_contable.sistema.contable.repository.SaleRepository;
+import com.sistema_contable.sistema.contable.services.accounting.interfaces.AccountService;
+import com.sistema_contable.sistema.contable.services.accounting.interfaces.EntryService;
 import com.sistema_contable.sistema.contable.services.interfaces.ClientService;
-import com.sistema_contable.sistema.contable.services.interfaces.PaymentTypeService;
-import com.sistema_contable.sistema.contable.services.interfaces.ProductService;
+import com.sistema_contable.sistema.contable.services.interfaces.EntityService;
 import com.sistema_contable.sistema.contable.services.interfaces.SaleService;
 
 @Service
@@ -24,105 +46,291 @@ public class SaleServiceImp implements SaleService {
 
     //dependencies
     @Autowired
-    private SaleRepository repository;
+    private SaleRepository saleRepository;
+
+    @Autowired
+    private InvoiceRepository invoiceRepository;
+
     @Autowired
     private ClientService clientService;
+
     @Autowired
-    private ProductService productService;
+    private EntityService entityService;
+
     @Autowired
-    private PaymentTypeService paymentTypeService;
+    private ProductRepository productRepository;
+
+    @Autowired
+    private LotRepository lotRepository;
+
+    @Autowired
+    private PaymentTypeRepository paymentTypeRepository;
+
+    @Autowired
+    private AccountService accountService;
+
+    @Autowired
+    private EntryService entryService;
+
+    @Autowired
+    private ModelMapper mapper;
 
     //CRUD
     @Override
-    public void create(Sale sale, User seller) throws Exception {
-        this.validateSale(sale, seller);
-        sale.setClient(this.searchClient(sale));
-        sale.setSeller(seller);
+    @Transactional
+    public InvoiceResponseDTO createSale(SaleRequestDTO saleRequestDTO, User seller) throws Exception {
+        // Validations
+        Client client = clientService.searchById(saleRequestDTO.getClientId());
+        EntityModel entity = entityService.getCurrentEntity();
+
+        // Calculate subtotal from items
+        Double subtotal = 0.0;
+        ListLotCost lotCosts = new ListLotCost();
+
+        for (SaleItemDTO item : saleRequestDTO.getItems()) {
+            Product product = productRepository.searchById(item.getProductId());
+            subtotal += product.getSalePrice() * item.getQuantity();
+
+            // Validate stock
+            Integer availableStock = lotRepository.findByProductWithStock(item.getProductId())
+                    .stream()
+                    .mapToInt(Lot::getStock)
+                    .sum();
+
+            if (availableStock < item.getQuantity()) {
+                throw new InsufficientStockException(
+                    "ERROR : Insufficient stock for product " + product.getName() + 
+                    ". Available: " + availableStock + ", Requested: " + item.getQuantity()
+                );
+            }
+
+            // Calculate cost using costing method
+            Double itemCost = calculateItemCost(product, item.getQuantity(), entity.getCostingMethod(), lotCosts);
+            lotCosts.addCost(itemCost);
+        }
+
+        // Apply discount
+        Double discountAmount = (saleRequestDTO.getDiscount() != null) ? 
+            (subtotal * saleRequestDTO.getDiscount() / 100) : 0.0;
+        Double total = subtotal - discountAmount;
+
+        // Create Sale
+        Sale sale = new Sale();
         sale.setDateCreated(new Date());
-        sale.setTotalPrice(this.configureSaleProducts(sale));
-        this.configurePayments(sale);
-        this.validatePaymentTotal(sale);
-        repository.save(sale);
+        sale.setClient(client);
+        sale.setSeller(seller);
+        sale.setEntity(entity);
+        sale.setTotalPrice(total);
+        sale.setSaleProducts(new ArrayList<>());
+        sale.setPayments(new ArrayList<>());
+
+        // Create SaleProducts
+        for (SaleItemDTO item : saleRequestDTO.getItems()) {
+            Product product = productRepository.searchById(item.getProductId());
+            SaleProduct saleProduct = new SaleProduct();
+            saleProduct.setProduct(product);
+            saleProduct.setQuantity(item.getQuantity());
+            saleProduct.setPrice(product.getSalePrice());
+            sale.getSaleProducts().add(saleProduct);
+        }
+
+        // Create Payment
+        Payment payment = new Payment();
+        payment.setAmount(total);
+        payment.setPaymentType(paymentTypeRepository.searchByName(saleRequestDTO.getPaymentMethod()));
+        if (payment.getPaymentType() == null) {
+            throw new RuntimeException("ERROR : Payment type not found: " + saleRequestDTO.getPaymentMethod());
+        }
+        sale.getPayments().add(payment);
+
+        saleRepository.save(sale);
+
+        // Deduct stock from lots
+        deductStock(saleRequestDTO, entity.getCostingMethod());
+
+        // Create Invoice (immutable snapshot)
+        Invoice invoice = createInvoice(sale, client, seller, entity, subtotal, discountAmount, total, 
+                saleRequestDTO, lotCosts.getTotalCost());
+        invoiceRepository.save(invoice);
+
+        // Create accounting entry for sale
+        createSaleEntry(sale, seller, payment.getPaymentType().getAccount());
+
+        // Create accounting entry for CMV
+        createCMVEntry(sale, seller, lotCosts.getTotalCost());
+
+        return mapper.map(invoice, InvoiceResponseDTO.class);
     }
 
     //SECONDARY METHODS
-    private void validateSale(Sale sale, User seller) throws Exception {
-        if (sale == null) {
-            throw new BadSaleException("ERROR : Sale is required");
+    private Double calculateItemCost(Product product, Integer quantity, CostingMethod costingMethod, 
+            ListLotCost lotCosts) throws Exception {
+        List<Lot> lots;
+        
+        if (costingMethod instanceof FIFO) {
+            lots = lotRepository.findByProductWithStockFIFO(product.getId());
+        } else if (costingMethod instanceof LIFO) {
+            lots = lotRepository.findByProductWithStockLIFO(product.getId());
+        } else if (costingMethod instanceof WAC) {
+            lots = lotRepository.findByProductWithStock(product.getId());
+        } else {
+            lots = lotRepository.findByProductWithStockFIFO(product.getId());
         }
-        if (seller == null) {
-            throw new BadSaleException("ERROR : Sale seller is required");
+
+        Double totalCost = 0.0;
+        Integer remaining = quantity;
+
+        for (Lot lot : lots) {
+            if (remaining <= 0) break;
+
+            Integer toTake = Math.min(remaining, lot.getStock());
+            totalCost += toTake * lot.getUnitPrice();
+            remaining -= toTake;
         }
-        if (sale.getClient() == null || sale.getClient().getId() == null) {
-            throw new BadSaleException("ERROR : Sale client is required");
-        }
-        if (sale.getSaleProducts() == null || sale.getSaleProducts().isEmpty()) {
-            throw new BadSaleException("ERROR : Sale needs at least one product");
-        }
-        if (sale.getPayments() == null || sale.getPayments().isEmpty()) {
-            throw new BadSaleException("ERROR : Sale needs at least one payment");
+
+        return totalCost;
+    }
+
+    private void deductStock(SaleRequestDTO saleRequestDTO, CostingMethod costingMethod) throws Exception {
+        for (SaleItemDTO item : saleRequestDTO.getItems()) {
+            List<Lot> lots;
+            
+            if (costingMethod instanceof FIFO) {
+                lots = lotRepository.findByProductWithStockFIFO(item.getProductId());
+            } else if (costingMethod instanceof LIFO) {
+                lots = lotRepository.findByProductWithStockLIFO(item.getProductId());
+            } else if (costingMethod instanceof WAC) {
+                lots = lotRepository.findByProductWithStock(item.getProductId());
+            } else {
+                lots = lotRepository.findByProductWithStockFIFO(item.getProductId());
+            }
+
+            Integer remaining = item.getQuantity();
+
+            for (Lot lot : lots) {
+                if (remaining <= 0) break;
+
+                Integer toTake = Math.min(remaining, lot.getStock());
+                lot.setStock(lot.getStock() - toTake);
+                lotRepository.save(lot);
+                remaining -= toTake;
+            }
         }
     }
 
-    private Client searchClient(Sale sale) throws Exception {
-        return clientService.searchById(sale.getClient().getId());
+    private Invoice createInvoice(Sale sale, Client client, User seller, EntityModel entity, 
+            Double subtotal, Double discountAmount, Double total, SaleRequestDTO saleRequestDTO, 
+            Double cmvAmount) {
+        Invoice invoice = new Invoice();
+        invoice.setInvoiceNumber("INV-" + sale.getId());
+        invoice.setDateCreated(sale.getDateCreated());
+        invoice.setClientFullName(client.getFullName());
+        invoice.setClientCuit(client.getCuit());
+        invoice.setSellerFullName(seller.getUsername());
+        invoice.setEntityName(entity.getName());
+        invoice.setSubtotal(subtotal);
+        invoice.setDiscountAmount(discountAmount);
+        invoice.setTotal(total);
+        invoice.setPaymentMethod(saleRequestDTO.getPaymentMethod());
+        invoice.setInstallments(saleRequestDTO.getInstallments());
+        
+        // Build items detail string
+        StringBuilder itemsDetail = new StringBuilder();
+        for (SaleItemDTO item : saleRequestDTO.getItems()) {
+            Product product = productRepository.searchById(item.getProductId());
+            itemsDetail.append(product.getName())
+                    .append(" x ")
+                    .append(item.getQuantity())
+                    .append(" @ $")
+                    .append(product.getSalePrice())
+                    .append(" = $")
+                    .append(product.getSalePrice() * item.getQuantity())
+                    .append(" | ");
+        }
+        invoice.setItemsDetail(itemsDetail.toString());
+        
+        invoice.setCostingMethod(entity.getCostingMethod().getName());
+        invoice.setCmvAmount(cmvAmount);
+        
+        return invoice;
     }
 
-    private Double configureSaleProducts(Sale sale) throws Exception {
-        Double totalPrice = 0.0;
-        for (SaleProduct saleProduct : sale.getSaleProducts()) {
-            this.validateSaleProduct(saleProduct);
-            Product product = productService.searchById(saleProduct.getProduct().getId());
-            this.validateProductPrice(product);
-            saleProduct.setProduct(product);
-            saleProduct.setPrice(product.getSalePrice());
-            totalPrice += saleProduct.getPrice() * saleProduct.getQuantity();
+    private void createSaleEntry(Sale sale, User seller, BalanceAccount paymentAccount) throws Exception {
+        Entry entry = new Entry();
+        entry.setDescription("Sale #" + sale.getId() + " - " + sale.getClient().getFullName());
+        
+        List<Movement> movements = new ArrayList<>();
+
+        // Debit: Payment account (Caja, Banco, etc.)
+        Movement debitMovement = new Movement();
+        debitMovement.setAccount(paymentAccount);
+        debitMovement.setDebit(sale.getTotalPrice());
+        debitMovement.setCredit(0.0);
+        movements.add(debitMovement);
+
+        // Credit: Sales account
+        Account salesData = accountService.searchByName("Ventas");
+        if (salesData == null) {
+            throw new RuntimeException("ERROR : Sales account not found");
         }
-        return totalPrice;
+        BalanceAccount salesAccount = accountService.searchBalanceAccount(salesData.getId());
+        
+        Movement creditMovement = new Movement();
+        creditMovement.setAccount(salesAccount);
+        creditMovement.setDebit(0.0);
+        creditMovement.setCredit(sale.getTotalPrice());
+        movements.add(creditMovement);
+
+        entry.setMovements(movements);
+        entryService.create(entry, seller);
     }
 
-    private void validateSaleProduct(SaleProduct saleProduct) throws Exception {
-        if (saleProduct == null) {
-            throw new BadSaleException("ERROR : Sale product is required");
+    private void createCMVEntry(Sale sale, User seller, Double cmvAmount) throws Exception {
+        Entry entry = new Entry();
+        entry.setDescription("CMV for Sale #" + sale.getId());
+        
+        List<Movement> movements = new ArrayList<>();
+
+        // Debit: CMV account (Resultado Negativo) TODO Revisar el nombre que se le va a poner a la cuenta de costo de mercaderías vendidas
+        Account expenseData = accountService.searchByName("Resultado Negativo");
+        if (expenseData == null) {
+            throw new RuntimeException("ERROR : Expense account not found");
         }
-        if (saleProduct.getProduct() == null || saleProduct.getProduct().getId() == null) {
-            throw new BadSaleException("ERROR : Sale product id is required");
+        BalanceAccount expenseAccount = accountService.searchBalanceAccount(expenseData.getId());
+        
+        Movement debitMovement = new Movement();
+        debitMovement.setAccount(expenseAccount);
+        debitMovement.setDebit(cmvAmount);
+        debitMovement.setCredit(0.0);
+        movements.add(debitMovement);
+
+        // Credit: Merchandise account
+        Account goodsData = accountService.searchByName("Mercaderías");
+        if (goodsData == null) {
+            throw new RuntimeException("ERROR : Merchandise account not found");
         }
-        if (saleProduct.getQuantity() == null || saleProduct.getQuantity() <= 0) {
-            throw new BadSaleException("ERROR : Sale product quantity is invalid");
-        }
+        BalanceAccount goodsAccount = accountService.searchBalanceAccount(goodsData.getId());
+        
+        Movement creditMovement = new Movement();
+        creditMovement.setAccount(goodsAccount);
+        creditMovement.setDebit(0.0);
+        creditMovement.setCredit(cmvAmount);
+        movements.add(creditMovement);
+
+        entry.setMovements(movements);
+        entryService.create(entry, seller);
     }
 
-    private void validateProductPrice(Product product) throws Exception {
-        if (product.getSalePrice() == null || product.getSalePrice() < 0) {
-            throw new BadSaleException("ERROR : Product sale price is invalid");
-        }
-    }
+    // Helper class to track total cost
+    private static class ListLotCost {
+        private Double totalCost = 0.0;
 
-    private void configurePayments(Sale sale) throws Exception {
-        for (Payment payment : sale.getPayments()) {
-            this.validatePayment(payment);
-            PaymentType paymentType = paymentTypeService.searchById(payment.getPaymentType().getId());
-            payment.setPaymentType(paymentType);
+        public void addCost(Double cost) {
+            this.totalCost += cost;
         }
-    }
 
-    private void validatePayment(Payment payment) throws Exception {
-        if (payment == null) {
-            throw new BadSaleException("ERROR : Payment is required");
-        }
-        if (payment.getPaymentType() == null || payment.getPaymentType().getId() == null) {
-            throw new BadSaleException("ERROR : Payment type is required");
-        }
-        if (payment.getAmount() == null || payment.getAmount() <= 0) {
-            throw new BadSaleException("ERROR : Payment amount is invalid");
-        }
-    }
-
-    private void validatePaymentTotal(Sale sale) throws Exception {
-        Double paymentTotal = sale.getPayments().stream().mapToDouble(Payment::getAmount).sum();
-        if (Math.abs(paymentTotal - sale.getTotalPrice()) > 0.01) {
-            throw new BadSaleException("ERROR : Sale payment total does not match sale total");
+        public Double getTotalCost() {
+            return totalCost;
         }
     }
 }

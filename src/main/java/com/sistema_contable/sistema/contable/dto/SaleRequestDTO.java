@@ -4,31 +4,49 @@ import java.util.List;
 
 public class SaleRequestDTO {
 
-    private Long idClient;
-    private List<SaleProductRequestDTO> products;
-    private List<PaymentRequestDTO> payments;
+    private Long clientId;
+    private List<SaleItemDTO> items;
+    private String paymentMethod;
+    private Integer installments;
+    private Double discount;
 
-    public Long getIdClient() {
-        return idClient;
+    public Long getClientId() {
+        return clientId;
     }
 
-    public void setIdClient(Long idClient) {
-        this.idClient = idClient;
+    public void setClientId(Long clientId) {
+        this.clientId = clientId;
     }
 
-    public List<SaleProductRequestDTO> getProducts() {
-        return products;
+    public List<SaleItemDTO> getItems() {
+        return items;
     }
 
-    public void setProducts(List<SaleProductRequestDTO> products) {
-        this.products = products;
+    public void setItems(List<SaleItemDTO> items) {
+        this.items = items;
     }
 
-    public List<PaymentRequestDTO> getPayments() {
-        return payments;
+    public String getPaymentMethod() {
+        return paymentMethod;
     }
 
-    public void setPayments(List<PaymentRequestDTO> payments) {
-        this.payments = payments;
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public Integer getInstallments() {
+        return installments;
+    }
+
+    public void setInstallments(Integer installments) {
+        this.installments = installments;
+    }
+
+    public Double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Double discount) {
+        this.discount = discount;
     }
 }

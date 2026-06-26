@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.sistema_contable.sistema.contable.model.Client;
+import com.sistema_contable.sistema.contable.model.EntityModel;
 import com.sistema_contable.sistema.contable.model.User;
 
 import jakarta.persistence.CascadeType;
@@ -36,6 +37,10 @@ public class Sale {
     @ManyToOne
     @JoinColumn(name = "seller_id")
     private User seller;
+
+    @ManyToOne
+    @JoinColumn(name = "sale_entity_id")
+    private EntityModel entity;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "sale_product_sale_id")
@@ -104,6 +109,14 @@ public class Sale {
 
     public void setSeller(User seller) {
         this.seller = seller;
+    }
+
+    public EntityModel getEntity() {
+        return entity;
+    }
+
+    public void setEntity(EntityModel entity) {
+        this.entity = entity;
     }
 
     public List<SaleProduct> getSaleProducts() {
