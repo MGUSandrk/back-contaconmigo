@@ -5,7 +5,11 @@ import org.springframework.stereotype.Repository;
 
 import com.sistema_contable.sistema.contable.model.sales.Invoice;
 
+import java.util.List;
+
 @Repository
 public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
+
+    List<Invoice> findByClientCuit(String clientCuit);
 
 }

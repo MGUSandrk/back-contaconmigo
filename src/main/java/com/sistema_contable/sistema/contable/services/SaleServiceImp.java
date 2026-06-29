@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.sistema_contable.sistema.contable.dto.InvoiceResponseDTO;
 import com.sistema_contable.sistema.contable.dto.SaleItemDTO;
 import com.sistema_contable.sistema.contable.dto.SaleRequestDTO;
+import com.sistema_contable.sistema.contable.dto.SaleResponseDTO;
+import com.sistema_contable.sistema.contable.exceptions.ClientNotFoundException;
 import com.sistema_contable.sistema.contable.exceptions.InsufficientStockException;
 import com.sistema_contable.sistema.contable.model.Client;
 import com.sistema_contable.sistema.contable.model.EntityModel;
@@ -162,7 +164,53 @@ public class SaleServiceImp implements SaleService {
         return mapper.map(invoice, InvoiceResponseDTO.class);
     }
 
+    //GETTERS
+    @Override
+    @Transactional(readOnly = true)
+    public List<SaleResponseDTO> getAllSales() throws Exception {
+        List<Sale> sales = saleRepository.findAll();
+        return sales.stream()
+                .map(this::mapToSaleResponseDTO)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<SaleResponseDTO> getSalesByClientId(Long clientId) throws Exception {
+        Client client = clientService.searchById(clientId);
+        if (client == null) {
+            throw new ClientNotFoundException("ERROR : Client not found with id: " + clientId);
+        }
+        List<Sale> sales = saleRepository.findByClientId(clientId);
+        return sales.stream()
+                .map(this::mapToSaleResponseDTO)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<InvoiceResponseDTO> getInvoicesByClientCuit(String clientCuit) throws Exception {
+        List<Invoice> invoices = invoiceRepository.findByClientCuit(clientCuit);
+        return invoices.stream()
+                .map(invoice -> mapper.map(invoice, InvoiceResponseDTO.class))
+                .toList();
+    }
+
     //SECONDARY METHODS
+    private SaleResponseDTO mapToSaleResponseDTO(Sale sale) {
+        SaleResponseDTO dto = new SaleResponseDTO();
+        dto.setId(sale.getId());
+        dto.setDateCreated(sale.getDateCreated());
+        dto.setClientId(sale.getClient() != null ? sale.getClient().getId() : null);
+        dto.setClientFullName(sale.getClient() != null ? sale.getClient().getFullName() : null);
+        dto.setSellerId(sale.getSeller() != null ? sale.getSeller().getId() : null);
+        dto.setSellerUsername(sale.getSeller() != null ? sale.getSeller().getUsername() : null);
+        dto.setEntityId(sale.getEntity() != null ? sale.getEntity().getId() : null);
+        dto.setEntityName(sale.getEntity() != null ? sale.getEntity().getName() : null);
+        dto.setTotalPrice(sale.getTotalPrice());
+        return dto;
+    }
+
     private Double calculateItemCost(Product product, Integer quantity, CostingMethod costingMethod, 
             ListLotCost lotCosts) throws Exception {
         List<Lot> lots;
@@ -292,7 +340,7 @@ public class SaleServiceImp implements SaleService {
         List<Movement> movements = new ArrayList<>();
 
         // Debit: CMV account (Resultado Negativo) TODO Revisar el nombre que se le va a poner a la cuenta de costo de mercaderías vendidas
-        Account expenseData = accountService.searchByName("Resultado Negativo");
+        Account expenseData = accountService.searchByName("Costo de Mercaderías Vendidas");
         if (expenseData == null) {
             throw new RuntimeException("ERROR : Expense account not found");
         }
