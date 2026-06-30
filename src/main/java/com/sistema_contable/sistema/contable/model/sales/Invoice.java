@@ -1,12 +1,16 @@
 package com.sistema_contable.sistema.contable.model.sales;
 
 import java.util.Date;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -51,8 +55,9 @@ public class Invoice {
     @Column(name = "installments")
     private Integer installments;
 
-    @Column(name = "items_detail")
-    private String itemsDetail;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "invoice_item_invoice_id")
+    private List<InvoiceItem> items;
 
     @Column(name = "costing_method")
     private String costingMethod;
@@ -159,12 +164,12 @@ public class Invoice {
         this.installments = installments;
     }
 
-    public String getItemsDetail() {
-        return itemsDetail;
+    public List<InvoiceItem> getItems() {
+        return items;
     }
 
-    public void setItemsDetail(String itemsDetail) {
-        this.itemsDetail = itemsDetail;
+    public void setItems(List<InvoiceItem> items) {
+        this.items = items;
     }
 
     public String getCostingMethod() {

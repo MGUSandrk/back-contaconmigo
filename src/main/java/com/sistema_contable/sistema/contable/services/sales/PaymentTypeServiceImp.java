@@ -1,4 +1,4 @@
-package com.sistema_contable.sistema.contable.services;
+package com.sistema_contable.sistema.contable.services.sales;
 
 import java.util.List;
 

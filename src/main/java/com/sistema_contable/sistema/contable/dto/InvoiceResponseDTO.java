@@ -1,6 +1,7 @@
 package com.sistema_contable.sistema.contable.dto;
 
 import java.util.Date;
+import java.util.List;
 
 public class InvoiceResponseDTO {
 
@@ -16,7 +17,7 @@ public class InvoiceResponseDTO {
     private Double total;
     private String paymentMethod;
     private Integer installments;
-    private String itemsDetail;
+    private List<InvoiceItemResponseDTO> items;
     private String costingMethod;
     private Double cmvAmount;
 
@@ -116,12 +117,12 @@ public class InvoiceResponseDTO {
         this.installments = installments;
     }
 
-    public String getItemsDetail() {
-        return itemsDetail;
+    public List<InvoiceItemResponseDTO> getItems() {
+        return items;
     }
 
-    public void setItemsDetail(String itemsDetail) {
-        this.itemsDetail = itemsDetail;
+    public void setItems(List<InvoiceItemResponseDTO> items) {
+        this.items = items;
     }
 
     public String getCostingMethod() {

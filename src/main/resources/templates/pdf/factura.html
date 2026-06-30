@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #222;
+            font-size: 12px;
+        }
+
+        h1 {
+            font-size: 22px;
+            margin-bottom: 6px;
+        }
+
+        .muted {
+            color: #666;
+        }
+
+        .section {
+            margin-top: 18px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 6px;
+            text-align: left;
+        }
+
+        th {
+            background: #f2f2f2;
+        }
+
+        .right {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <h1>Factura</h1>
+    <div class="muted" th:text="${factura.invoiceNumber}">INV-1</div>
+
+    <div class="section">
+        <strong>Cliente:</strong>
+        <span th:text="${factura.clientFullName}">Cliente</span>
+        <br />
+        <strong>CUIT:</strong>
+        <span th:text="${factura.clientCuit}">CUIT</span>
+        <br />
+        <strong>Vendedor:</strong>
+        <span th:text="${factura.sellerFullName}">Vendedor</span>
+        <br />
+        <strong>Entidad:</strong>
+        <span th:text="${factura.entityName}">Entidad</span>
+    </div>
+
+    <div class="section">
+        <table>
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th class="right">Cantidad</th>
+                    <th class="right">Precio unitario</th>
+                    <th class="right">Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="item : ${factura.items}">
+                    <td th:text="${item.productName}">Producto</td>
+                    <td class="right" th:text="${item.quantity}">1</td>
+                    <td class="right" th:text="${item.unitPrice}">0.0</td>
+                    <td class="right" th:text="${item.subtotal}">0.0</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <table>
+            <tbody>
+                <tr>
+                    <td>Subtotal</td>
+                    <td class="right" th:text="${factura.subtotal}">0.0</td>
+                </tr>
+                <tr>
+                    <td>Descuento</td>
+                    <td class="right" th:text="${factura.discountAmount}">0.0</td>
+                </tr>
+                <tr>
+                    <td><strong>Total</strong></td>
+                    <td class="right"><strong th:text="${factura.total}">0.0</strong></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

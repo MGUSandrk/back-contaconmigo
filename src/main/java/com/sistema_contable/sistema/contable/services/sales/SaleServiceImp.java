@@ -1,21 +1,22 @@
-package com.sistema_contable.sistema.contable.services;
+package com.sistema_contable.sistema.contable.services.sales;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sistema_contable.sistema.contable.dto.InvoiceResponseDTO;
+import com.sistema_contable.sistema.contable.dto.InvoiceItemResponseDTO;
 import com.sistema_contable.sistema.contable.dto.SaleItemDTO;
 import com.sistema_contable.sistema.contable.dto.SaleRequestDTO;
 import com.sistema_contable.sistema.contable.dto.SaleResponseDTO;
 import com.sistema_contable.sistema.contable.exceptions.ClientNotFoundException;
 import com.sistema_contable.sistema.contable.exceptions.InsufficientStockException;
 import com.sistema_contable.sistema.contable.model.Client;
+import com.sistema_contable.sistema.contable.model.CostingMethodType;
 import com.sistema_contable.sistema.contable.model.EntityModel;
 import com.sistema_contable.sistema.contable.model.Lot;
 import com.sistema_contable.sistema.contable.model.Product;
@@ -24,8 +25,8 @@ import com.sistema_contable.sistema.contable.model.accounting.Account;
 import com.sistema_contable.sistema.contable.model.accounting.BalanceAccount;
 import com.sistema_contable.sistema.contable.model.accounting.Entry;
 import com.sistema_contable.sistema.contable.model.accounting.Movement;
-import com.sistema_contable.sistema.contable.model.CostingMethodType;
 import com.sistema_contable.sistema.contable.model.sales.Invoice;
+import com.sistema_contable.sistema.contable.model.sales.InvoiceItem;
 import com.sistema_contable.sistema.contable.model.sales.Payment;
 import com.sistema_contable.sistema.contable.model.sales.Sale;
 import com.sistema_contable.sistema.contable.model.sales.SaleProduct;
@@ -70,9 +71,6 @@ public class SaleServiceImp implements SaleService {
 
     @Autowired
     private EntryService entryService;
-
-    @Autowired
-    private ModelMapper mapper;
 
     //CRUD
     @Override
@@ -158,7 +156,7 @@ public class SaleServiceImp implements SaleService {
         // Create accounting entry for CMV
         createCMVEntry(sale, seller, lotCosts.getTotalCost());
 
-        return mapper.map(invoice, InvoiceResponseDTO.class);
+        return mapToInvoiceResponseDTO(invoice);
     }
 
     //GETTERS
@@ -189,7 +187,7 @@ public class SaleServiceImp implements SaleService {
     public List<InvoiceResponseDTO> getInvoicesByClientCuit(String clientCuit) throws Exception {
         List<Invoice> invoices = invoiceRepository.findByClientCuit(clientCuit);
         return invoices.stream()
-                .map(invoice -> mapper.map(invoice, InvoiceResponseDTO.class))
+                .map(this::mapToInvoiceResponseDTO)
                 .toList();
     }
 
@@ -205,6 +203,39 @@ public class SaleServiceImp implements SaleService {
         dto.setEntityId(sale.getEntity() != null ? sale.getEntity().getId() : null);
         dto.setEntityName(sale.getEntity() != null ? sale.getEntity().getName() : null);
         dto.setTotalPrice(sale.getTotalPrice());
+        return dto;
+    }
+
+    private InvoiceResponseDTO mapToInvoiceResponseDTO(Invoice invoice) {
+        InvoiceResponseDTO dto = new InvoiceResponseDTO();
+        dto.setId(invoice.getId());
+        dto.setInvoiceNumber(invoice.getInvoiceNumber());
+        dto.setDateCreated(invoice.getDateCreated());
+        dto.setClientFullName(invoice.getClientFullName());
+        dto.setClientCuit(invoice.getClientCuit());
+        dto.setSellerFullName(invoice.getSellerFullName());
+        dto.setEntityName(invoice.getEntityName());
+        dto.setSubtotal(invoice.getSubtotal());
+        dto.setDiscountAmount(invoice.getDiscountAmount());
+        dto.setTotal(invoice.getTotal());
+        dto.setPaymentMethod(invoice.getPaymentMethod());
+        dto.setInstallments(invoice.getInstallments());
+        dto.setCostingMethod(invoice.getCostingMethod());
+        dto.setCmvAmount(invoice.getCmvAmount());
+        if (invoice.getItems() != null) {
+            dto.setItems(invoice.getItems().stream().map(this::mapToInvoiceItemResponseDTO).toList());
+        }
+        return dto;
+    }
+
+    private InvoiceItemResponseDTO mapToInvoiceItemResponseDTO(InvoiceItem invoiceItem) {
+        InvoiceItemResponseDTO dto = new InvoiceItemResponseDTO();
+        dto.setId(invoiceItem.getId());
+        dto.setProductId(invoiceItem.getProductId());
+        dto.setProductName(invoiceItem.getProductName());
+        dto.setQuantity(invoiceItem.getQuantity());
+        dto.setUnitPrice(invoiceItem.getUnitPrice());
+        dto.setSubtotal(invoiceItem.getSubtotal());
         return dto;
     }
 
@@ -287,20 +318,18 @@ public class SaleServiceImp implements SaleService {
         invoice.setPaymentMethod(saleRequestDTO.getPaymentMethod());
         invoice.setInstallments(saleRequestDTO.getInstallments());
         
-        // Build items detail string
-        StringBuilder itemsDetail = new StringBuilder();
+        List<InvoiceItem> invoiceItems = new ArrayList<>();
         for (SaleItemDTO item : saleRequestDTO.getItems()) {
             Product product = productRepository.searchById(item.getProductId());
-            itemsDetail.append(product.getName())
-                    .append(" x ")
-                    .append(item.getQuantity())
-                    .append(" @ $")
-                    .append(product.getSalePrice())
-                    .append(" = $")
-                    .append(product.getSalePrice() * item.getQuantity())
-                    .append(" | ");
+            InvoiceItem invoiceItem = new InvoiceItem();
+            invoiceItem.setProductId(product.getId());
+            invoiceItem.setProductName(product.getName());
+            invoiceItem.setQuantity(item.getQuantity());
+            invoiceItem.setUnitPrice(product.getSalePrice());
+            invoiceItem.setSubtotal(product.getSalePrice() * item.getQuantity());
+            invoiceItems.add(invoiceItem);
         }
-        invoice.setItemsDetail(itemsDetail.toString());
+        invoice.setItems(invoiceItems);
         
         invoice.setCostingMethod(entity.getCostingMethod().name());
         invoice.setCmvAmount(cmvAmount);
