@@ -1,49 +1,20 @@
-package com.sistema_contable.sistema.contable.model;
+package com.sistema_contable.sistema.contable.dto;
 
 import java.util.Date;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.sistema_contable.sistema.contable.model.VatCondition;
+import com.sistema_contable.sistema.contable.model.costing_method.CostingMethodType;
 
-@Entity
-@Table(name = "entities")
-public class EntityModel {
+public class EntityResponseDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_entity")
     private Long id;
-
-    @Column(name = "entity_name")
     private String name;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "entity_costing_method")
     private CostingMethodType costingMethod;
-
-    @Column(name = "entity_cuit")
     private String cuit;
-
-    @Column(name = "entity_commercial_address")
     private String commercialAddress;
-
-    @Column(name = "entity_gross_income_number")
     private String grossIncomeNumber;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "entity_vat_condition")
     private VatCondition vatCondition;
-
-    @Column(name = "entity_activity_start_date")
     private Date activityStartDate;
-
-    @Column(name = "entity_sales_point")
     private Integer salesPoint;
 
     public Long getId() {
@@ -117,5 +88,4 @@ public class EntityModel {
     public void setSalesPoint(Integer salesPoint) {
         this.salesPoint = salesPoint;
     }
-
 }

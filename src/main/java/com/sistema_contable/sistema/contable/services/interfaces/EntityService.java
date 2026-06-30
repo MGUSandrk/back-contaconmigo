@@ -1,7 +1,12 @@
 package com.sistema_contable.sistema.contable.services.interfaces;
 
 import com.sistema_contable.sistema.contable.model.EntityModel;
+import com.sistema_contable.sistema.contable.model.CostingMethodType;
 
 public interface EntityService {
-    EntityModel getCurrentEntity() throws Exception;
+
+    EntityModel getEntity() throws Exception;
+    CostingMethodType getCostingMethod() throws Exception;
+    void modify(EntityModel entity) throws Exception;
+    void create(EntityModel entity) throws Exception;
 }

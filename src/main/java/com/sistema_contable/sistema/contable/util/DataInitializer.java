@@ -1,15 +1,21 @@
 package com.sistema_contable.sistema.contable.util;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import com.sistema_contable.sistema.contable.model.EntityModel;
 import com.sistema_contable.sistema.contable.model.Role;
 import com.sistema_contable.sistema.contable.model.User;
+import com.sistema_contable.sistema.contable.model.VatCondition;
 import com.sistema_contable.sistema.contable.model.accounting.Account;
 import com.sistema_contable.sistema.contable.model.accounting.BalanceAccount;
 import com.sistema_contable.sistema.contable.model.accounting.ControlAccount;
+import com.sistema_contable.sistema.contable.model.costing_method.CostingMethodType;
 import com.sistema_contable.sistema.contable.services.accounting.interfaces.AccountService;
+import com.sistema_contable.sistema.contable.services.interfaces.EntityService;
 import com.sistema_contable.sistema.contable.services.interfaces.UserService;
 
 @Component
@@ -19,10 +25,13 @@ public class DataInitializer implements CommandLineRunner {
     private UserService userService;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private EntityService entityService;
 
-    public DataInitializer(UserService userService, AccountService accountService) {
+    public DataInitializer(UserService userService, AccountService accountService, EntityService entityService) {
         this.userService = userService;
         this.accountService = accountService;
+        this.entityService = entityService;
     }
 
     @Override
@@ -112,6 +121,15 @@ public class DataInitializer implements CommandLineRunner {
         otrosing.setName("Otros ingresos");
         accountService.create(otrosing, 4L);
 
-
+        EntityModel entity = new EntityModel();
+        entity.setName("Empresa");
+        entity.setCostingMethod(CostingMethodType.FIFO);
+        entity.setCuit("00000000000");
+        entity.setCommercialAddress("No configurado");
+        entity.setGrossIncomeNumber("NO CONTRIBUYENTE");
+        entity.setVatCondition(VatCondition.IVA_RESPONSABLE_INSCRIPTO);
+        entity.setActivityStartDate(new Date());
+        entity.setSalesPoint(1);
+        entityService.create(entity);
     }
 }

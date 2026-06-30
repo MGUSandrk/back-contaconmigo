@@ -9,5 +9,6 @@ public interface ProductService {
     List<Product> getAll() throws Exception;
     Product searchById(Long id) throws Exception;
     Product searchByName(String name) throws Exception;
+    Integer totalStock(Product product);
     void delete(Long id) throws Exception;
 }

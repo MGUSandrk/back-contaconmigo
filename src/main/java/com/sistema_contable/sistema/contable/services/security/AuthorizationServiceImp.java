@@ -39,6 +39,26 @@ public class AuthorizationServiceImp implements AuthorizationService {
         else{return userDB;}
     }
 
+    @Override
+    public User countableAuthorize(String token) throws Exception {
+        //search the user in the db
+        User userDB = service.findByUsername(jwtTokenUtil.getSubject(token));
+        //check the token, user existence and the role
+        if (!jwtTokenUtil.verify(token) || userDB == null || (!userDB.getRole().equals(Role.COUNTABLE) && !userDB.getRole().equals(Role.ADMIN))){throw new AuthorizationException("ERROR : Invalid token or User not role required");}
+        else{return userDB;}
+    }
+
+    @Override
+    public User sellerAuthorize(String token) throws Exception {
+        //search the user in the db
+        User userDB = service.findByUsername(jwtTokenUtil.getSubject(token));
+        //check the token, user existence and the role
+        if (!jwtTokenUtil.verify(token) || userDB == null || (!userDB.getRole().equals(Role.SELLER) && !userDB.getRole().equals(Role.ADMIN))){throw new AuthorizationException("ERROR : Invalid token or User not role required");}
+        else{return userDB;}
+    }
+
+
+
 
 
 }

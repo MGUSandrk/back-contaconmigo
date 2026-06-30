@@ -8,6 +8,7 @@ public interface PaymentTypeService {
     void create(PaymentType paymentType) throws Exception;
     List<PaymentType> getAll() throws Exception;
     PaymentType searchById(Long id) throws Exception;
+    Double currentBalance(PaymentType paymentType) throws Exception;
     void modifyById(Long id, PaymentType paymentType) throws Exception;
     void deleteById(Long id) throws Exception;
 }

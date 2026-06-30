@@ -7,6 +7,7 @@ public class ProductResponseDTO {
     private Long id;
     private String name;
     private Double salePrice;
+    private Integer totalStock;
     private List<LotResponseDTO> lots;
 
     public Long getId() {
@@ -31,6 +32,14 @@ public class ProductResponseDTO {
 
     public void setSalePrice(Double salePrice) {
         this.salePrice = salePrice;
+    }
+
+    public Integer getTotalStock() {
+        return totalStock;
+    }
+
+    public void setTotalStock(Integer totalStock) {
+        this.totalStock = totalStock;
     }
 
     public List<LotResponseDTO> getLots() {

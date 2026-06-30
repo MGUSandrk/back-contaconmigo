@@ -1,0 +1,11 @@
+package com.sistema_contable.sistema.contable.model;
+
+public enum VatCondition {
+    IVA_RESPONSABLE_INSCRIPTO,
+    IVA_EXENTO,
+    NO_RESPONSABLE_IVA,
+    RESPONSABLE_MONOTRIBUTO,
+    MONOTRIBUTO_TRABAJADOR_INDEPENDIENTE_PROMOVIDO,
+    MONOTRIBUTISTA_SOCIAL,
+    CONSUMIDOR_FINAL
+}

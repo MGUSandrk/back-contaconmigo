@@ -52,7 +52,7 @@ public class ClientResource {
     @GetMapping(produces = "application/json")
     public ResponseEntity<?> getAll(@RequestHeader("Authorization") String token) {
         try {
-            authService.adminAuthorize(token);
+            authService.sellerAuthorize(token);
             return new ResponseEntity<>(clientResponse(service.getAll()), HttpStatus.OK);
         } catch (ModelExceptions modelError) {
             System.out.println(modelError.getMessage());
@@ -65,7 +65,7 @@ public class ClientResource {
     @GetMapping(path = "/{id}", produces = "application/json")
     public ResponseEntity<?> getById(@RequestHeader("Authorization") String token, @PathVariable Long id) {
         try {
-            authService.adminAuthorize(token);
+            authService.sellerAuthorize(token);
             return new ResponseEntity<>(clientResponse(service.searchById(id)), HttpStatus.OK);
         } catch (ModelExceptions modelError) {
             System.out.println(modelError.getMessage());
@@ -112,6 +112,10 @@ public class ClientResource {
         client.setFullName(dto.getFullName());
         client.setEmail(dto.getEmail());
         client.setCuit(dto.getCuit());
+        client.setVatCondition(dto.getVatCondition());
+        client.setDocumentType(dto.getDocumentType());
+        client.setDocumentNumber(dto.getDocumentNumber());
+        client.setCommercialAddress(dto.getCommercialAddress());
         return client;
     }
 
@@ -125,6 +129,10 @@ public class ClientResource {
         dto.setFullName(client.getFullName());
         dto.setEmail(client.getEmail());
         dto.setCuit(client.getCuit());
+        dto.setVatCondition(client.getVatCondition());
+        dto.setDocumentType(client.getDocumentType());
+        dto.setDocumentNumber(client.getDocumentNumber());
+        dto.setCommercialAddress(client.getCommercialAddress());
         return dto;
     }
 }
