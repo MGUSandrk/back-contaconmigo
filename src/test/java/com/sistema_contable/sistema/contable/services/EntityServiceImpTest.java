@@ -18,7 +18,7 @@ import com.sistema_contable.sistema.contable.exceptions.BadEntityException;
 import com.sistema_contable.sistema.contable.exceptions.EntityNotFindException;
 import com.sistema_contable.sistema.contable.model.EntityModel;
 import com.sistema_contable.sistema.contable.model.VatCondition;
-import com.sistema_contable.sistema.contable.model.costing_method.CostingMethodType;
+import com.sistema_contable.sistema.contable.model.CostingMethodType;
 import com.sistema_contable.sistema.contable.repository.EntityRepository;
 
 public class EntityServiceImpTest {

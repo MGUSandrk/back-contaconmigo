@@ -13,7 +13,7 @@ import com.sistema_contable.sistema.contable.model.VatCondition;
 import com.sistema_contable.sistema.contable.model.accounting.Account;
 import com.sistema_contable.sistema.contable.model.accounting.BalanceAccount;
 import com.sistema_contable.sistema.contable.model.accounting.ControlAccount;
-import com.sistema_contable.sistema.contable.model.costing_method.CostingMethodType;
+import com.sistema_contable.sistema.contable.model.CostingMethodType;
 import com.sistema_contable.sistema.contable.services.accounting.interfaces.AccountService;
 import com.sistema_contable.sistema.contable.services.interfaces.EntityService;
 import com.sistema_contable.sistema.contable.services.interfaces.UserService;
