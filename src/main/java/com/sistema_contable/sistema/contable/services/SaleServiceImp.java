@@ -24,10 +24,7 @@ import com.sistema_contable.sistema.contable.model.accounting.Account;
 import com.sistema_contable.sistema.contable.model.accounting.BalanceAccount;
 import com.sistema_contable.sistema.contable.model.accounting.Entry;
 import com.sistema_contable.sistema.contable.model.accounting.Movement;
-import com.sistema_contable.sistema.contable.model.costing_method.CostingMethod;
-import com.sistema_contable.sistema.contable.model.costing_method.FIFO;
-import com.sistema_contable.sistema.contable.model.costing_method.LIFO;
-import com.sistema_contable.sistema.contable.model.costing_method.WAC;
+import com.sistema_contable.sistema.contable.model.CostingMethodType;
 import com.sistema_contable.sistema.contable.model.sales.Invoice;
 import com.sistema_contable.sistema.contable.model.sales.Payment;
 import com.sistema_contable.sistema.contable.model.sales.Sale;
@@ -211,18 +208,22 @@ public class SaleServiceImp implements SaleService {
         return dto;
     }
 
-    private Double calculateItemCost(Product product, Integer quantity, CostingMethod costingMethod, 
+    private Double calculateItemCost(Product product, Integer quantity, CostingMethodType costingMethod,
             ListLotCost lotCosts) throws Exception {
         List<Lot> lots;
         
-        if (costingMethod instanceof FIFO) {
-            lots = lotRepository.findByProductWithStockFIFO(product.getId());
-        } else if (costingMethod instanceof LIFO) {
-            lots = lotRepository.findByProductWithStockLIFO(product.getId());
-        } else if (costingMethod instanceof WAC) {
-            lots = lotRepository.findByProductWithStock(product.getId());
-        } else {
-            lots = lotRepository.findByProductWithStockFIFO(product.getId());
+        switch (costingMethod) {
+            case FIFO:
+                lots = lotRepository.findByProductWithStockFIFO(product.getId());
+                break;
+            case LIFO:
+                lots = lotRepository.findByProductWithStockLIFO(product.getId());
+                break;
+            case WAC:
+                lots = lotRepository.findByProductWithStock(product.getId());
+                break;
+            default:
+                lots = lotRepository.findByProductWithStockFIFO(product.getId());
         }
 
         Double totalCost = 0.0;
@@ -239,18 +240,22 @@ public class SaleServiceImp implements SaleService {
         return totalCost;
     }
 
-    private void deductStock(SaleRequestDTO saleRequestDTO, CostingMethod costingMethod) throws Exception {
+    private void deductStock(SaleRequestDTO saleRequestDTO, CostingMethodType costingMethod) throws Exception {
         for (SaleItemDTO item : saleRequestDTO.getItems()) {
             List<Lot> lots;
             
-            if (costingMethod instanceof FIFO) {
-                lots = lotRepository.findByProductWithStockFIFO(item.getProductId());
-            } else if (costingMethod instanceof LIFO) {
-                lots = lotRepository.findByProductWithStockLIFO(item.getProductId());
-            } else if (costingMethod instanceof WAC) {
-                lots = lotRepository.findByProductWithStock(item.getProductId());
-            } else {
-                lots = lotRepository.findByProductWithStockFIFO(item.getProductId());
+            switch (costingMethod) {
+                case FIFO:
+                    lots = lotRepository.findByProductWithStockFIFO(item.getProductId());
+                    break;
+                case LIFO:
+                    lots = lotRepository.findByProductWithStockLIFO(item.getProductId());
+                    break;
+                case WAC:
+                    lots = lotRepository.findByProductWithStock(item.getProductId());
+                    break;
+                default:
+                    lots = lotRepository.findByProductWithStockFIFO(item.getProductId());
             }
 
             Integer remaining = item.getQuantity();
@@ -297,7 +302,7 @@ public class SaleServiceImp implements SaleService {
         }
         invoice.setItemsDetail(itemsDetail.toString());
         
-        invoice.setCostingMethod(entity.getCostingMethod().getName());
+        invoice.setCostingMethod(entity.getCostingMethod().name());
         invoice.setCmvAmount(cmvAmount);
         
         return invoice;

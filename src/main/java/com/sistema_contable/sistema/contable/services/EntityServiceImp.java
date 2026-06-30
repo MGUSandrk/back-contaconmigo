@@ -1,13 +1,11 @@
 package com.sistema_contable.sistema.contable.services;
 
+import com.sistema_contable.sistema.contable.model.CostingMethodType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sistema_contable.sistema.contable.exceptions.CostingMethodNotFoundException;
 import com.sistema_contable.sistema.contable.model.EntityModel;
-import com.sistema_contable.sistema.contable.model.costing_method.CostingMethod;
-import com.sistema_contable.sistema.contable.repository.CostingMethodRepository;
 import com.sistema_contable.sistema.contable.repository.EntityRepository;
 import com.sistema_contable.sistema.contable.services.interfaces.EntityService;
 
@@ -17,9 +15,6 @@ public class EntityServiceImp implements EntityService {
     //dependencies
     @Autowired
     private EntityRepository entityRepository;
-
-    @Autowired
-    private CostingMethodRepository costingMethodRepository;
 
     //GETTERS
     @Override
@@ -32,11 +27,7 @@ public class EntityServiceImp implements EntityService {
         }
 
         if (entity.getCostingMethod() == null) {
-            CostingMethod fifo = costingMethodRepository.searchByName("FIFO");
-            if (fifo == null) {
-                throw new CostingMethodNotFoundException("ERROR : FIFO costing method not found");
-            }
-            entity.setCostingMethod(fifo);
+            entity.setCostingMethod(CostingMethodType.FIFO);
             entityRepository.save(entity);
         }
 
