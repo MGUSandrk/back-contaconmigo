@@ -11,6 +11,7 @@ import com.sistema_contable.sistema.contable.model.accounting.BalanceAccount;
 import com.sistema_contable.sistema.contable.model.sales.PaymentType;
 import com.sistema_contable.sistema.contable.repository.AccountRepository;
 import com.sistema_contable.sistema.contable.repository.PaymentTypeRepository;
+import com.sistema_contable.sistema.contable.services.accounting.interfaces.AccountService;
 import com.sistema_contable.sistema.contable.services.interfaces.PaymentTypeService;
 
 @Service
@@ -21,6 +22,8 @@ public class PaymentTypeServiceImp implements PaymentTypeService {
     private PaymentTypeRepository repository;
     @Autowired
     private AccountRepository accountRepository;
+    @Autowired
+    private AccountService accountService;
 
     //CRUD
     @Override
@@ -63,6 +66,14 @@ public class PaymentTypeServiceImp implements PaymentTypeService {
             throw new PaymentTypeNotFindException("ERROR : Payment type not found by id");
         }
         return paymentType;
+    }
+
+    @Override
+    public Double currentBalance(PaymentType paymentType) throws Exception {
+        if (paymentType == null || paymentType.getAccount() == null || paymentType.getAccount().getId() == null) {
+            return 0D;
+        }
+        return accountService.lastBalance(paymentType.getAccount().getId());
     }
 
     //SECONDARY METHODS

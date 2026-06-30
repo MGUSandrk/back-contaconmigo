@@ -78,7 +78,8 @@ public class SaleServiceImp implements SaleService {
     public InvoiceResponseDTO createSale(SaleRequestDTO saleRequestDTO, User seller) throws Exception {
         // Validations
         Client client = clientService.searchById(saleRequestDTO.getClientId());
-        EntityModel entity = entityService.getCurrentEntity();
+        EntityModel entity = entityService.getEntity();
+        CostingMethodType costingMethod = entityService.getCostingMethod();
 
         // Calculate subtotal from items
         Double subtotal = 0.0;
@@ -102,7 +103,7 @@ public class SaleServiceImp implements SaleService {
             }
 
             // Calculate cost using costing method
-            Double itemCost = calculateItemCost(product, item.getQuantity(), entity.getCostingMethod(), lotCosts);
+            Double itemCost = calculateItemCost(product, item.getQuantity(), costingMethod, lotCosts);
             lotCosts.addCost(itemCost);
         }
 
@@ -143,7 +144,7 @@ public class SaleServiceImp implements SaleService {
         saleRepository.save(sale);
 
         // Deduct stock from lots
-        deductStock(saleRequestDTO, entity.getCostingMethod());
+        deductStock(saleRequestDTO, costingMethod);
 
         // Create Invoice (immutable snapshot)
         Invoice invoice = createInvoice(sale, client, seller, entity, subtotal, discountAmount, total, 

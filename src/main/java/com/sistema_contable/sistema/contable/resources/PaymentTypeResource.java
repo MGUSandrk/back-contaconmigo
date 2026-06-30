@@ -1,5 +1,6 @@
 package com.sistema_contable.sistema.contable.resources;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +54,7 @@ public class PaymentTypeResource {
     @GetMapping(produces = "application/json")
     public ResponseEntity<?> getAll(@RequestHeader("Authorization") String token) {
         try {
-            authService.adminAuthorize(token);
+            authService.sellerAuthorize(token);
             return new ResponseEntity<>(paymentTypeResponse(service.getAll()), HttpStatus.OK);
         } catch (ModelExceptions modelError) {
             System.out.println(modelError.getMessage());
@@ -66,7 +67,7 @@ public class PaymentTypeResource {
     @GetMapping(path = "/{id}", produces = "application/json")
     public ResponseEntity<?> getById(@RequestHeader("Authorization") String token, @PathVariable Long id) {
         try {
-            authService.adminAuthorize(token);
+            authService.sellerAuthorize(token);
             return new ResponseEntity<>(paymentTypeResponse(service.searchById(id)), HttpStatus.OK);
         } catch (ModelExceptions modelError) {
             System.out.println(modelError.getMessage());
@@ -119,11 +120,15 @@ public class PaymentTypeResource {
         return paymentType;
     }
 
-    private List<PaymentTypeResponseDTO> paymentTypeResponse(List<PaymentType> paymentTypes) {
-        return paymentTypes.stream().map(this::paymentTypeResponse).toList();
+    private List<PaymentTypeResponseDTO> paymentTypeResponse(List<PaymentType> paymentTypes) throws Exception {
+        List<PaymentTypeResponseDTO> dtos = new ArrayList<>();
+        for (PaymentType paymentType : paymentTypes) {
+            dtos.add(paymentTypeResponse(paymentType));
+        }
+        return dtos;
     }
 
-    private PaymentTypeResponseDTO paymentTypeResponse(PaymentType paymentType) {
+    private PaymentTypeResponseDTO paymentTypeResponse(PaymentType paymentType) throws Exception {
         PaymentTypeResponseDTO dto = new PaymentTypeResponseDTO();
         dto.setId(paymentType.getId());
         dto.setType(paymentType.getType());
@@ -132,6 +137,7 @@ public class PaymentTypeResource {
             dto.setAccountName(paymentType.getAccount().getName());
             dto.setAccountCode(paymentType.getAccount().getCode());
         }
+        dto.setBalance(service.currentBalance(paymentType));
         return dto;
     }
 }

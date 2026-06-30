@@ -66,7 +66,7 @@ public class ProductResource {
     @GetMapping(produces = "application/json")
     public ResponseEntity<?> getAll(@RequestHeader("Authorization") String token) {
         try {
-            authService.adminAuthorize(token);
+            authService.sellerAuthorize(token);
             return new ResponseEntity<>(productResponse(service.getAll()), HttpStatus.OK);
         } catch (ModelExceptions modelError) {
             System.out.println(modelError.getMessage());
@@ -151,6 +151,7 @@ public class ProductResource {
         dto.setId(product.getId());
         dto.setName(product.getName());
         dto.setSalePrice(product.getSalePrice());
+        dto.setTotalStock(service.totalStock(product));
         dto.setLots(product.getLots().stream().map(this::lotResponse).toList());
         return dto;
     }
