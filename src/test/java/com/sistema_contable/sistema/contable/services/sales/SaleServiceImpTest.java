@@ -1,15 +1,12 @@
 package com.sistema_contable.sistema.contable.services.sales;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import com.sistema_contable.sistema.contable.dto.SaleItemDTO;
 import com.sistema_contable.sistema.contable.dto.SaleRequestDTO;
@@ -21,25 +18,28 @@ import com.sistema_contable.sistema.contable.model.User;
 import com.sistema_contable.sistema.contable.model.sales.Invoice;
 import com.sistema_contable.sistema.contable.model.sales.InvoiceItem;
 import com.sistema_contable.sistema.contable.model.sales.Sale;
-import com.sistema_contable.sistema.contable.repository.ProductRepository;
+import com.sistema_contable.sistema.contable.model.sales.SaleProduct;
 
 public class SaleServiceImpTest {
 
     @Test
     void createInvoiceStoresImmutableStructuredItems() throws Exception {
         SaleServiceImp service = new SaleServiceImp();
-        ProductRepository productRepository = Mockito.mock(ProductRepository.class);
-        inject(service, "productRepository", productRepository);
 
         Product product = new Product();
         product.setId(7L);
         product.setName("Lapicera azul");
         product.setSalePrice(150.0);
-        when(productRepository.searchById(7L)).thenReturn(product);
+
+        SaleProduct saleProduct = new SaleProduct();
+        saleProduct.setProduct(product);
+        saleProduct.setQuantity(2);
+        saleProduct.setPrice(150.0);
 
         Sale sale = new Sale();
         sale.setId(3L);
         sale.setDateCreated(new Date());
+        sale.setSaleProducts(List.of(saleProduct));
 
         Client client = new Client();
         client.setFullName("Juan Perez");
@@ -93,11 +93,5 @@ public class SaleServiceImpTest {
         assertEquals(2, invoiceItem.getQuantity());
         assertEquals(150.0, invoiceItem.getUnitPrice());
         assertEquals(300.0, invoiceItem.getSubtotal());
-    }
-
-    private void inject(Object target, String fieldName, Object value) throws Exception {
-        Field field = SaleServiceImp.class.getDeclaredField(fieldName);
-        field.setAccessible(true);
-        field.set(target, value);
     }
 }

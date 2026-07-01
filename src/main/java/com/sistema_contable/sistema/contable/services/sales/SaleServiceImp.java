@@ -211,11 +211,18 @@ public class SaleServiceImp implements SaleService {
         InvoiceResponseDTO dto = new InvoiceResponseDTO();
         dto.setId(invoice.getId());
         dto.setInvoiceNumber(invoice.getInvoiceNumber());
+        dto.setInvoiceType(invoice.getInvoiceType());
         dto.setDateCreated(invoice.getDateCreated());
         dto.setClientFullName(invoice.getClientFullName());
         dto.setClientCuit(invoice.getClientCuit());
         dto.setSellerFullName(invoice.getSellerFullName());
         dto.setEntityName(invoice.getEntityName());
+        dto.setEntityCuit(invoice.getEntityCuit());
+        dto.setEntityCommercialAddress(invoice.getEntityCommercialAddress());
+        dto.setEntityGrossIncomeNumber(invoice.getEntityGrossIncomeNumber());
+        dto.setEntityVatCondition(invoice.getEntityVatCondition());
+        dto.setEntityActivityStartDate(invoice.getEntityActivityStartDate());
+        dto.setSalesPoint(invoice.getSalesPoint());
         dto.setSubtotal(invoice.getSubtotal());
         dto.setDiscountAmount(invoice.getDiscountAmount());
         dto.setTotal(invoice.getTotal());
@@ -306,36 +313,18 @@ public class SaleServiceImp implements SaleService {
     private Invoice createInvoice(Sale sale, Client client, User seller, EntityModel entity, 
             Double subtotal, Double discountAmount, Double total, SaleRequestDTO saleRequestDTO, 
             Double cmvAmount) {
-        Invoice invoice = new Invoice();
-        invoice.setInvoiceNumber("INV-" + sale.getId());
-        invoice.setDateCreated(sale.getDateCreated());
-        invoice.setClientFullName(client.getFullName());
-        invoice.setClientCuit(client.getCuit());
-        invoice.setSellerFullName(seller.getUsername());
-        invoice.setEntityName(entity.getName());
-        invoice.setSubtotal(subtotal);
-        invoice.setDiscountAmount(discountAmount);
-        invoice.setTotal(total);
-        invoice.setPaymentMethod(saleRequestDTO.getPaymentMethod());
-        invoice.setInstallments(saleRequestDTO.getInstallments());
-        
-        List<InvoiceItem> invoiceItems = new ArrayList<>();
-        for (SaleItemDTO item : saleRequestDTO.getItems()) {
-            Product product = productRepository.searchById(item.getProductId());
-            InvoiceItem invoiceItem = new InvoiceItem();
-            invoiceItem.setProductId(product.getId());
-            invoiceItem.setProductName(product.getName());
-            invoiceItem.setQuantity(item.getQuantity());
-            invoiceItem.setUnitPrice(product.getSalePrice());
-            invoiceItem.setSubtotal(product.getSalePrice() * item.getQuantity());
-            invoiceItems.add(invoiceItem);
-        }
-        invoice.setItems(invoiceItems);
-        
-        invoice.setCostingMethod(entity.getCostingMethod().name());
-        invoice.setCmvAmount(cmvAmount);
-        
-        return invoice;
+        return Invoice.fromSale(
+                sale,
+                client,
+                seller,
+                entity,
+                saleRequestDTO.getInvoiceType(),
+                saleRequestDTO.getPaymentMethod(),
+                saleRequestDTO.getInstallments(),
+                subtotal,
+                discountAmount,
+                total,
+                cmvAmount);
     }
 
     private void createSaleEntry(Sale sale, User seller, BalanceAccount paymentAccount) throws Exception {

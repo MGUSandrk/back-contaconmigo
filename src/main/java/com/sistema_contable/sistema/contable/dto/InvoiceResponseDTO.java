@@ -3,15 +3,24 @@ package com.sistema_contable.sistema.contable.dto;
 import java.util.Date;
 import java.util.List;
 
+import com.sistema_contable.sistema.contable.model.sales.InvoiceType;
+
 public class InvoiceResponseDTO {
 
     private Long id;
     private String invoiceNumber;
+    private InvoiceType invoiceType;
     private Date dateCreated;
     private String clientFullName;
     private String clientCuit;
     private String sellerFullName;
     private String entityName;
+    private String entityCuit;
+    private String entityCommercialAddress;
+    private String entityGrossIncomeNumber;
+    private String entityVatCondition;
+    private Date entityActivityStartDate;
+    private Integer salesPoint;
     private Double subtotal;
     private Double discountAmount;
     private Double total;
@@ -35,6 +44,14 @@ public class InvoiceResponseDTO {
 
     public void setInvoiceNumber(String invoiceNumber) {
         this.invoiceNumber = invoiceNumber;
+    }
+
+    public InvoiceType getInvoiceType() {
+        return invoiceType;
+    }
+
+    public void setInvoiceType(InvoiceType invoiceType) {
+        this.invoiceType = invoiceType;
     }
 
     public Date getDateCreated() {
@@ -75,6 +92,54 @@ public class InvoiceResponseDTO {
 
     public void setEntityName(String entityName) {
         this.entityName = entityName;
+    }
+
+    public String getEntityCuit() {
+        return entityCuit;
+    }
+
+    public void setEntityCuit(String entityCuit) {
+        this.entityCuit = entityCuit;
+    }
+
+    public String getEntityCommercialAddress() {
+        return entityCommercialAddress;
+    }
+
+    public void setEntityCommercialAddress(String entityCommercialAddress) {
+        this.entityCommercialAddress = entityCommercialAddress;
+    }
+
+    public String getEntityGrossIncomeNumber() {
+        return entityGrossIncomeNumber;
+    }
+
+    public void setEntityGrossIncomeNumber(String entityGrossIncomeNumber) {
+        this.entityGrossIncomeNumber = entityGrossIncomeNumber;
+    }
+
+    public String getEntityVatCondition() {
+        return entityVatCondition;
+    }
+
+    public void setEntityVatCondition(String entityVatCondition) {
+        this.entityVatCondition = entityVatCondition;
+    }
+
+    public Date getEntityActivityStartDate() {
+        return entityActivityStartDate;
+    }
+
+    public void setEntityActivityStartDate(Date entityActivityStartDate) {
+        this.entityActivityStartDate = entityActivityStartDate;
+    }
+
+    public Integer getSalesPoint() {
+        return salesPoint;
+    }
+
+    public void setSalesPoint(Integer salesPoint) {
+        this.salesPoint = salesPoint;
     }
 
     public Double getSubtotal() {

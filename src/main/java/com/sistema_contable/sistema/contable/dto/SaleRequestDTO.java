@@ -2,6 +2,8 @@ package com.sistema_contable.sistema.contable.dto;
 
 import java.util.List;
 
+import com.sistema_contable.sistema.contable.model.sales.InvoiceType;
+
 public class SaleRequestDTO {
 
     private Long clientId;
@@ -9,6 +11,7 @@ public class SaleRequestDTO {
     private String paymentMethod;
     private Integer installments;
     private Double discount;
+    private InvoiceType invoiceType;
 
     public Long getClientId() {
         return clientId;
@@ -48,5 +51,13 @@ public class SaleRequestDTO {
 
     public void setDiscount(Double discount) {
         this.discount = discount;
+    }
+
+    public InvoiceType getInvoiceType() {
+        return invoiceType;
+    }
+
+    public void setInvoiceType(InvoiceType invoiceType) {
+        this.invoiceType = invoiceType;
     }
 }
